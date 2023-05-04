@@ -11,7 +11,7 @@
       <!--div v-if="isLoggedIn"-->
       <div v-if="this.$store.state.auth.isLoggedIn">
         <p>Hello, {{ this.$store.state.auth.user }}</p>
-        <v-btn v-on:click="printUsername">state.user</v-btn>
+        <v-btn v-on:click="jwtAccess">JWT Access</v-btn>
       </div>
     <div v-else>
       <p>Please Login</p>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'AuthComponent',
   // this should cooperate with window.open to oauth provider at front end, shouldn't be a <a> tag
@@ -63,8 +64,11 @@ export default {
       });
     },
 
-    printUsername() {
-      console.log(this.$store.state.auth.user)
+    async jwtAccess() {
+      // console.log(this.$store.state.auth.user)
+      // baseURL is configured so there's no need to use full api path
+      const response = await axios.get("test")
+      console.log(response.data)
     },
   }
 }

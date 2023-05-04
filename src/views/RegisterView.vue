@@ -3,8 +3,9 @@
     <h1>Register</h1>
     <form @submit.prevent="registerUser">
       <div>
-        <label for="username">Name</label>
-        <input type="text" id="username" v-model="user.username" required>
+        <label for="user_name">Name</label>
+        <!--If you want to change the record name, be careful with v-model-->
+        <input type="text" id="user_name" v-model="user.user_name" required>
       </div>
       <div>
         <label for="email">Email</label>
@@ -24,7 +25,7 @@ export default {
   data() {
     return {
       user: {
-        username: '',
+        user_name: '',
         email: '',
         password: ''
       }

@@ -4,8 +4,6 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-const API_URL = 'http://localhost:8000/api/'
-
 const state = {
   user: null,
   token: localStorage.getItem('token') || '',
@@ -37,9 +35,9 @@ const actions = {
         console.log("OK")
         commit('setUser', { 'user_name': userCredentials.user_name, 'token': userCredentials.token });
       } else {
-        const response = await axios.post(API_URL + 'login', userCredentials)
+        const response = await axios.post('login', userCredentials)
         // the key in python's storage is username
-        const user_name = response.data.username
+        const user_name = response.data.user_name
         const token = response.data.access_token
         // this notation is like dispatch('login', user)
         commit('setUser', { 'user_name': user_name, 'token': token });
@@ -51,9 +49,9 @@ const actions = {
   },
   async register({ commit }, userCredentials) {
     try {
-      const response = await axios.post(API_URL + 'register', userCredentials)
+      const response = await axios.post('register', userCredentials)
       // do not mess up user and username
-      const user_name = response.data.username
+      const user_name = response.data.user_name
       const token = response.data.access_token
       commit('setUser', { 'user_name': user_name, 'token': token })
     } catch (error) {
@@ -63,7 +61,7 @@ const actions = {
   },
   async logout({ commit }) {
     try {
-      await axios.post(API_URL + 'logout')
+      await axios.post('logout')
       commit('logout')
     } catch (error) {
       console.log(error)

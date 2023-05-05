@@ -1,56 +1,88 @@
 import axios from "axios"
+import auth from "@/auth.js"
 import jwtDecode from "jwt-decode"
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api/", // 替换为您的API基础URL
+  baseURL: "http://localhost:8000/api/",
   headers: {
     "Content-Type": "application/json",
   },
 })
 
+// 这个专用的axios实例是用来防止apiClient上设计的拦截器在需要刷新token时触发循环而设计的
+const refreshClient = axios.create({
+  baseURL: "http://localhost:8000/api/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
+
+// 豁免JWT token的URL列表
 const exemptedApiList = ['register', 'login']
+
+const isTokenExpired = (token) => {
+  const decoded = jwtDecode(token)
+  const currentTime = Date.now() / 1000
+  return decoded.exp < currentTime
+}
 
 // 请求拦截器
 apiClient.interceptors.request.use(async (config) => {
-  // 如果不是豁免的URL
-  if (!exemptedApiList.includes(config.url.replace(config.baseURL, ''))) {
-    const token = localStorage.getItem("token")
-    const refreshToken = localStorage.getItem("refresh_token")
+  const url = config.url.split('/').pop()
+  const accessToken = localStorage.getItem('token')
+  const refreshToken = localStorage.getItem('refresh_token')
 
-    // 如果有访问令牌并且令牌过期
-    if (token && isTokenExpired(token)) {
-      try {
-        // 使用刷新令牌获取新的访问令牌
-        const response = await apiClient.post("/refresh_token", {}, { headers: { Authorization: `Bearer ${refreshToken}` } })
-        const newAccessToken = response.data.access_token
-
-        // 将新的访问令牌存储到localStorage
-        localStorage.setItem("token", newAccessToken)
-
-        // 用新的访问令牌更新请求头
-        config.headers["Authorization"] = `Bearer ${newAccessToken}`
-      } catch (error) {
-        // 如果刷新失败，清除登陆状态并跳转到登录页面
-        localStorage.removeItem('user_name')
-        localStorage.removeItem('token')
-        localStorage.removeItem('refresh_token')
-        localStorage.removeItem('isLoggedIn')
-        // 重定向
-        // window.location.href = "/login";
-      }
-    } else if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`
-    }
+  // 豁免token的URL，不改动直接放行
+  // if (exemptedApiList.includes(url) || !accessToken) {
+  if (exemptedApiList.includes(url)) {
+    return config
   }
-  return config;
-});
 
-// 解码JWT令牌并检查是否过期
-function isTokenExpired(token) {
-  const tokenData = jwtDecode(token)
-  const currentTime = Date.now() / 1000
+  // 需要token的URL，如果token没过期，加入token后放行
+  if (!isTokenExpired(accessToken)) {
+    config.headers['Authorization'] = `Bearer ${accessToken}`
+    return config
+  }
 
-  return tokenData.exp < currentTime
-}
+  // 以上两种情况都不是的话，进入此处的判断。需要token的URL，如果token过期，成功申请新的token的话加入后放行。申请失败直接清空状态并退出登录
+  if (refreshToken && !isTokenExpired(refreshToken)) {
+    try {
+      console.log('token expired, refreshing')
+      const response = await refreshClient.post('refresh_token', {}, {
+        headers: {
+          'Authorization': `Bearer ${refreshToken}`
+        }
+      })
+      const newAccessToken = response.data.access_token
+      // Update with the new token
+      auth.state.token = newAccessToken
+      localStorage.setItem('token', newAccessToken)
+      config.headers['Authorization'] = `Bearer ${newAccessToken}`
+      return config
+    } catch (error) {
+      console.error('Error refreshing token', error)
+      auth.state.user_name = ''
+      auth.state.token = ''
+      auth.state.refresh_token = ''
+      auth.state.isLoggedIn = false
+      localStorage.removeItem('user_name')
+      localStorage.removeItem('token')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('isLoggedIn')
+      // window.location.href = '/logout'
+    }
+  } else {
+    console.error('Error refreshing token', error)
+    auth.state.user_name = ''
+    auth.state.token = ''
+    auth.state.refresh_token = ''
+    auth.state.isLoggedIn = false
+    localStorage.removeItem('user_name')
+    localStorage.removeItem('token')
+    localStorage.removeItem('refresh_token')
+    localStorage.removeItem('isLoggedIn')
+    // window.location.href = '/logout'
+  }
+})
 
 export default apiClient

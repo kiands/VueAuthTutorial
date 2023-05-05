@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import axios from 'axios';
+// import axios from 'axios';
 import store from './store'
 import vuetify from './plugins/vuetify'
 
+/*
 // Interceptor for JWT token (add access_token into each request's header)
 // 配置 Axios 基础 URL 和请求头
 axios.defaults.baseURL = 'http://localhost:8000/api/';
@@ -27,6 +28,7 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+*/
 
 Vue.config.productionTip = false
 

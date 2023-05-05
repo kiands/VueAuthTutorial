@@ -1,47 +1,57 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import apiClient from "@/api.js"
 
 Vue.use(Vuex)
 
+// Initialize data from page refresh
+let user_name = localStorage.getItem("user_name") || '';
+let token = localStorage.getItem("token") || '';
+let refresh_token = localStorage.getItem("refresh_token") || '';
+let isLoggedIn = localStorage.getItem("isLoggedIn") || false;
+
 const state = {
-  user: null,
-  token: localStorage.getItem('token') || '',
-  isLoggedIn: false
+  user_name: user_name,
+  token: token,
+  refresh_token: refresh_token,
+  isLoggedIn: isLoggedIn,
 }
 
 const mutations = {
   // the parameter user here is an object
   setUser(state, user) {
-    console.log(user)
-    state.user = user.user_name
+    state.user_name = user.user_name
     state.token = user.token
+    state.refresh_token = user.refresh_token
     state.isLoggedIn = true
-    // localStorage
+    // Use localStorage to survive data from page refresh
+    localStorage.setItem('user_name', user.user_name)
     localStorage.setItem('token', user.token)
+    localStorage.setItem('refresh_token', user.refresh_token)
+    localStorage.setItem('isLoggedIn', true)
   },
   logout(state) {
-    state.user = null
+    state.user_name = ''
     state.token = ''
+    state.refresh_token = ''
     state.isLoggedIn = false
+    localStorage.removeItem('user_name')
     localStorage.removeItem('token')
+    localStorage.removeItem('refresh_token')
+    localStorage.removeItem('isLoggedIn')
   }
 }
 
 const actions = {
   async login({ commit }, userCredentials) {
     try {
-      if (userCredentials.oauth) {
-        console.log("OK")
-        commit('setUser', { 'user_name': userCredentials.user_name, 'token': userCredentials.token });
-      } else {
-        const response = await axios.post('login', userCredentials)
-        // the key in python's storage is username
-        const user_name = response.data.user_name
-        const token = response.data.access_token
-        // this notation is like dispatch('login', user)
-        commit('setUser', { 'user_name': user_name, 'token': token });
-      }
+      const response = await apiClient.post('login', userCredentials)
+      // the key in python's storage is username
+      const user_name = response.data.user_name
+      const token = response.data.access_token
+      const refresh_token = response.data.refresh_token
+      // this notation is like dispatch('login', user)
+      commit('setUser', { 'user_name': user_name, 'token': token, 'refresh_token': refresh_token })
     } catch (error) {
       console.log(error)
       throw error
@@ -49,11 +59,12 @@ const actions = {
   },
   async register({ commit }, userCredentials) {
     try {
-      const response = await axios.post('register', userCredentials)
+      const response = await apiClient.post('register', userCredentials)
       // do not mess up user and username
       const user_name = response.data.user_name
       const token = response.data.access_token
-      commit('setUser', { 'user_name': user_name, 'token': token })
+      const refresh_token = response.data.refresh_token
+      commit('setUser', { 'user_name': user_name, 'token': token, 'refresh_token': refresh_token })
     } catch (error) {
       console.log(error)
       throw error
@@ -61,7 +72,7 @@ const actions = {
   },
   async logout({ commit }) {
     try {
-      await axios.post('logout')
+      await apiClient.post('logout')
       commit('logout')
     } catch (error) {
       console.log(error)

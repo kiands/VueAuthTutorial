@@ -10,8 +10,9 @@
     <div>
       <!--div v-if="isLoggedIn"-->
       <div v-if="this.$store.state.auth.isLoggedIn">
-        <p>Hello, {{ this.$store.state.auth.user }}</p>
+        <p>Hello, {{ this.$store.state.auth.user_name }}</p>
         <v-btn v-on:click="jwtAccess">JWT Access</v-btn>
+        <v-btn v-on:click="logout">Logout</v-btn>
       </div>
     <div v-else>
       <p>Please Login</p>
@@ -21,7 +22,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiClient from "@/api.js"
 export default {
   name: 'AuthComponent',
   // this should cooperate with window.open to oauth provider at front end, shouldn't be a <a> tag
@@ -44,16 +45,20 @@ export default {
       // 监听 message 事件
       window.addEventListener('message', (event) => {
         const user_name = event.data.user_name
-        // temporarily use fake data, remember to change it in Flask's template
         const access_token = event.data.access_token
-        if (user_name && access_token) {
+        const refresh_token = event.data.refresh_token
+        if (user_name && access_token && refresh_token) {
           // 使用 access_token 进行后续操作，例如将其存储到 Vuex state
           console.log('User name:', user_name);
           console.log('Access token:', access_token);
+          console.log('Refresh token:', refresh_token);
 
           // vuex setUser
-          this.$store.dispatch(
-            'auth/login', { "oauth": true, "user_name": user_name, "token": access_token }
+          // this.$store.dispatch(
+          //   'auth/login', { "oauth": true, "user_name": user_name, "token": access_token }
+          // )
+          this.$store.commit( // mutations belongs to commit
+            'auth/setUser', { "user_name": user_name, "token": access_token, "refresh_token": refresh_token }
           )
         } else {
           console.error('Failed to get access token');
@@ -67,8 +72,14 @@ export default {
     async jwtAccess() {
       // console.log(this.$store.state.auth.user)
       // baseURL is configured so there's no need to use full api path
-      const response = await axios.get("test")
+      const response = await apiClient.get("test")
       console.log(response.data)
+    },
+
+    logout() { // actions belongs to dispatch
+      this.$store.dispatch(
+        'auth/logout'
+      )
     },
   }
 }

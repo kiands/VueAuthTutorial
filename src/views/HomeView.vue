@@ -1,17 +1,32 @@
 <template>
-  <div>
-    <div class="container">
-      <img src="@/assets/Home/img1.webp" alt="img1" />
-      <div style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
-        <div>WELCOME</div>
-        <h1>GIVING BACK TO OUR COMMUNITY THROUGH LIFE-CHANGING SERVICES.</h1>
-        <div style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
-          <v-btn>JOIN US</v-btn>
-          <v-btn>LEARN MORE</v-btn>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-container>
+    <v-row>
+      <v-col>
+        <v-card class="mx-auto" max-width="800">
+          <v-img src="@/assets/Home/img1.webp" max-width="800">
+          </v-img>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
+          <v-card-text class="text-h5" style="margin-top: 45px; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center;">
+            WELCOME
+          </v-card-text>
+          <v-card-text class="text-h4 font-weight-bold" style="margin-top: -20px; padding-left: 30px; padding-right: 30px; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center;">
+            GIVING BACK TO OUR COMMUNITY THROUGH LIFE-CHANGING SERVICES.
+          </v-card-text>
+          <div style="padding-bottom: 50px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+            <v-btn style="margin-bottom: 20px">
+              JOIN US
+            </v-btn>
+            <v-btn>
+              LEARN MORE
+            </v-btn>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
     
 <script>
@@ -20,17 +35,3 @@
     // 这里是组件的JavaScript代码
   }
 </script>
-  
-<style>
-  .container {
-    width: 80vw; /* 上一层 div 的宽度 */
-    overflow: hidden; /* 隐藏超出部分 */
-    display: flex;
-    flex-direction: row;
-  }
-  .container img {
-    max-width: 70%;
-    max-height: 70%;
-    display: block; /* 图片以块级元素显示，避免与其他内容混排 */
-  }
-</style>

@@ -1,12 +1,9 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/register">Register</router-link>
-      <router-link to="/login">Login</router-link>
-      <a href="https://github.com/login/oauth/authorize?client_id=89450a7c608bbd0300d8">github oauth</a>
-      <v-btn @click="GitHubOAuth">GHB</v-btn>
-    </nav>
-    <router-view />
+  <div style="height: 300px; display: flex; flex-direction: column; justify-content: space-between; align-items: center">
+    <div style="height: 200px; width: 200px; display: flex; flex-direction: column; justify-content: space-around;">
+      <v-btn @click="GitHubOAuth">Login via GitHub</v-btn>
+      <v-btn @click="GitHubOAuth">Login via Google</v-btn>
+    </div>
     <div>
       <!--div v-if="isLoggedIn"-->
       <div v-if="this.$store.state.auth.isLoggedIn">
@@ -14,10 +11,10 @@
         <v-btn v-on:click="jwtAccess">JWT Access</v-btn>
         <v-btn v-on:click="logout">Logout</v-btn>
       </div>
-    <div v-else>
-      <p>Please Login</p>
+      <div v-else>
+        <p>Please Login</p>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 

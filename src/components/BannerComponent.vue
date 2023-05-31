@@ -17,29 +17,15 @@
           <v-list
             nav
             dense
+            v-for="item in items"
+            :key="item"
           >
-            <v-list-item-group
-              v-model="group"
-              active-class="deep-purple--text text--accent-4"
-            >
-              <v-list-item>
-                <v-list-item-title>Foo</v-list-item-title>
-              </v-list-item>
-
-              <v-list-item>
-                <v-list-item-title>Bar</v-list-item-title>
-              </v-list-item>
-
-              <v-list-item>
-                <v-list-item-title>Fizz</v-list-item-title>
-              </v-list-item>
-
-              <v-list-item>
-                <v-list-item-title>Buzz</v-list-item-title>
-              </v-list-item>
-            </v-list-item-group>
+            <v-list-item @click="$router.push(links[item])">
+              <v-list-item-title>{{ item }}</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-navigation-drawer>
+        <!--This div element contains the banner text and icons-->
         <div style="width: 95vw; display: flex; flex-direction: column; justify-content: space-between; align-items: center">
           <!--This will only show up on small and down screens-->
           <div v-show="$vuetify.breakpoint.smAndDown">3473400000</div>
@@ -76,9 +62,9 @@
           <v-tab
             v-for="item in items"
             :key="item"
-            @click="$router.push(item[1])"
+            @click="$router.push(links[item])"
           >
-            {{ item[0] }}
+            {{ item }}
           </v-tab>
         </v-tabs>
       </v-card>
@@ -130,15 +116,25 @@ export default {
       drawer: false,
       dialog: false,
       items: [
-        ['Home', '/'],
-        ['About Us', '/about'],
-        ['Services', '/services'],
-        ['Volunteer', '/volunteer'],
-        ['Support', '/support'],
-        ['Events', '/events'],
-        ['Become a Sponsor', '/sponsor'],
-        ['More', '/more']
-      ]
+        'Home',
+        'About Us',
+        'Services',
+        'Volunteer',
+        'Support',
+        'Events',
+        'Become a Sponsor',
+        'More',
+      ],
+      links: {
+        'Home': '/',
+        'About Us': '/about',
+        'Services': '/services',
+        'Volunteer': '/volunteer',
+        'Support': '/support',
+        'Events': '/events',
+        'Become a Sponsor': '/sponsor',
+        'More': '/more',
+      }
     }
   },
 };

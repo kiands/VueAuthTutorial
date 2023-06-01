@@ -5,7 +5,7 @@
     <p>Welcome to our about page!</p>
   </div>
 </template>
-  
+
 <script>
   export default {
 name: 'AboutView',

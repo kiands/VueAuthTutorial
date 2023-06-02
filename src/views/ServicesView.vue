@@ -61,6 +61,7 @@ export default {
   }),
 
   created() {
+    // When this view is loaded, whatever first time or refresh, call the API and load the main list.
     this.showServicesList()
   },
 

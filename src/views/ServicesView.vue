@@ -57,7 +57,7 @@ export default {
     currentAllowedDates: [],
     services: [],
     servicesBody: {},
-    bookedServices: { "title": "Food Support" }
+    bookedServices: { "title": "Food Support" },
   }),
 
   created() {
@@ -74,10 +74,17 @@ export default {
         this.servicesBody = this.$store.state.service.servicesBody
       })
     },
-    // I will use the `key` in v-for to access each service's allowed dates
+    /*
+      I will use the `key` in v-for to access each service's allowed dates.
+      In this data picker component, each time the expansion panel was clicked, the allowed dates
+      can be updated. After the update, the `:allowedDates` will check new data and update the view.
+      Remember that in some primitive implementations, changes in data will not always reflect in the view.
+      The time slots may need the `watch` feature to monitor the change of selected data and do update.
+    */
     fetchAllowedDates: function(service) {
       console.log(service) // The formal implementation will be an api call that uses this parameter
-      this.currentAllowedDates = ['2023-06-02', '2023-06-03', '2023-06-22']
+      // Call the API to get current service's allowed dates.
+      this.currentAllowedDates = ['2023-06-02', '2023-06-05', '2023-06-10']
     },
 
     /*

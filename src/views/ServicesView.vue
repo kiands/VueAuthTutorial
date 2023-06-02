@@ -48,34 +48,46 @@
 </style>
 
 <script>
-  export default {
-    name: 'ServicesView',
-    // 这里是组件的JavaScript代码
-    data: () => ({
-      currentAllowedDates: [],
-      services: ['Food Support', 'Tutor Support'],
-      servicesBody: {
-        "Food Support": {"title": "Food Support", "chosenDate": '2023-06-22' },
-        "Tutor Support": {"title": "Tutor Support", "chosenDate": '2023-06-02' }
-      }
-    }),
+import apiClient from "@/api.js" // May not be used if no need to test functions
 
-    methods: {
-      // I will use the `key` in v-for to access each service's allowed dates
-      fetchAllowedDates: function(service) {
-        console.log(service) // The formal implementation will be an api call that uses this parameter
-        this.currentAllowedDates = ['2023-06-02', '2023-06-03', '2023-06-22']
-      },
+export default {
+  name: 'ServicesView',
+  // 这里是组件的JavaScript代码
+  data: () => ({
+    currentAllowedDates: [],
+    services: [],
+    servicesBody: {},
+    bookedServices: { "title": "Food Support" }
+  }),
 
-      /*
-        The allowedDates property of vuetify date picker is a method to check each date the component
-        passes. For example: allowed dates are even dates:
-        allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0
-      */
-      allowedDates: function(val) {
-        // Do not pass currentAllowedDates to this function because vue will not do this, use `this.` -- ChatGPT
-        return this.currentAllowedDates.includes(val)
-      }
+  created() {
+    this.showServicesList()
+  },
+
+  methods: {
+    showServicesList: function() {
+      console.log('loaded')
+      // This is async and we need to wait for $store to be modified or v-for will be empty
+      this.$store.dispatch('service/showServicesList').then(() => {
+        this.services = this.$store.state.service.services
+        this.servicesBody = this.$store.state.service.servicesBody
+      })
     },
-  }
+    // I will use the `key` in v-for to access each service's allowed dates
+    fetchAllowedDates: function(service) {
+      console.log(service) // The formal implementation will be an api call that uses this parameter
+      this.currentAllowedDates = ['2023-06-02', '2023-06-03', '2023-06-22']
+    },
+
+    /*
+      The allowedDates property of vuetify date picker is a method to check each date the component
+      passes. For example: allowed dates are even dates:
+      allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0
+    */
+    allowedDates: function(val) {
+      // Do not pass currentAllowedDates to this function because vue will not do this, use `this.` -- ChatGPT
+      return this.currentAllowedDates.includes(val)
+    }
+  },
+}
 </script>

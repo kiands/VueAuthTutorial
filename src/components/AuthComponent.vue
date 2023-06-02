@@ -66,6 +66,7 @@ export default {
       });
     },
 
+    // Actually we should use vuex to do actions instead of calling them directly
     async jwtAccess() {
       // console.log(this.$store.state.auth.user)
       // baseURL is configured so there's no need to use full api path
@@ -73,6 +74,7 @@ export default {
       console.log(response.data)
     },
 
+    // This component calls Vuex, Vuex uses the interceptor named apiClient
     logout() { // actions belongs to dispatch
       this.$store.dispatch(
         'auth/logout'

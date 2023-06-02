@@ -133,5 +133,16 @@ def logout():
     session.pop('user', None)
     return jsonify({"msg": "Logged out and current JWT token is revoked"}), 204
 
+# 测试服务项目API的路由
+@app.route('/api/services', methods=['GET'])
+def services():
+    return jsonify({
+        'services': ['PYFS', 'PYTS'],
+        'servicesBody': {
+            "PYFS": {"title": "PYFS", "chosenDate": '2023-06-22' },
+            "PYTS": {"title": "PYTS", "chosenDate": '2023-06-02' }
+        }
+    })
+
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

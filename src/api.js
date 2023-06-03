@@ -19,7 +19,7 @@ const refreshClient = axios.create({
 })
 
 // 豁免JWT token的URL列表
-const exemptedApiList = ['register', 'login', 'services']
+const exemptedApiList = ['register', 'login', 'services', 'service-current-allowed-dates']
 
 const isTokenExpired = (token) => {
   const decoded = jwtDecode(token)

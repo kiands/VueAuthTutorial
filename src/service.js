@@ -16,6 +16,7 @@ const state = {
   services: [],
   servicesBody: [],
   currentAllowedDates: [],
+  currentChosenDate: '',
   bookedServices: []
 }
 
@@ -26,13 +27,16 @@ const mutations = {
     state.servicesBody = services.servicesBody
   },
   setService(state, service) {
-    state.currentAllowedDates = service.currentAllowedDates
     state.bookedServices = service.bookedServices
+  },
+  setCurrentAllowedDates(state, datesInformation) {
+    // An array
+    state.currentAllowedDates = datesInformation.currentAllowedDates
   }
 }
 
 const actions = {
-  async showServicesList({ commit }) {
+  async fetchServicesList({ commit }) {
     try {
       // Get services information from API
       const response = await apiClient.get('services')
@@ -46,23 +50,11 @@ const actions = {
       throw error
     }
   },
-  async register({ commit }, userCredentials) {
+  async fetchCurrentAllowedDates({ commit }, serviceName) {
     try {
-      const response = await apiClient.post('register', userCredentials)
-      // do not mess up user and username
-      const user_name = response.data.user_name
-      const token = response.data.access_token
-      const refresh_token = response.data.refresh_token
-      commit('setUser', { 'user_name': user_name, 'token': token, 'refresh_token': refresh_token })
-    } catch (error) {
-      console.log(error)
-      throw error
-    }
-  },
-  async logout({ commit }) {
-    try {
-      await apiClient.post('logout')
-      commit('logout')
+      const response = await apiClient.post('service-current-allowed-dates', serviceName)
+      const currentAllowedDates = response.data.currentAllowedDates
+      commit('setCurrentAllowedDates', { 'currentAllowedDates': currentAllowedDates })
     } catch (error) {
       console.log(error)
       throw error

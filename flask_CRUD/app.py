@@ -139,10 +139,21 @@ def services():
     return jsonify({
         'services': ['PYFS', 'PYTS'],
         'servicesBody': {
-            "PYFS": {"title": "PYFS", "chosenDate": '2023-06-22' },
-            "PYTS": {"title": "PYTS", "chosenDate": '2023-06-02' }
+            "PYFS": { "title": "PYFS" },
+            "PYTS": { "title": "PYTS" }
         }
     })
+
+# 测试服务项目允许的时间段API的路由
+@app.route('/api/service-current-allowed-dates', methods=['POST'])
+def currentAllowedDates():
+    data = request.get_json()
+    service = data['service']
+    if service == 'PYFS':
+        response = ['2023-06-08', '2023-06-09', '2023-06-19', '2023-06-20', '2023-06-21']
+    else:
+        response = ['2023-06-06', '2023-06-07', '2023-06-08']
+    return jsonify({ 'currentAllowedDates': response })
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

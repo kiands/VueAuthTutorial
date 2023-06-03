@@ -2,12 +2,13 @@
   <v-container>
     <v-row style="display: flex; justify-content: center;">
       <v-card cols="12" style="margin-top: 10px; width: 80%">
-        <v-expansion-panels
-          accordion
-          v-for="service in services"
-          :key="service"
-        >
-          <v-expansion-panel style="width: 100%" @click="fetchAllowedDates(service)">
+        <v-expansion-panels>
+          <!--Use v-for here to avoid UI errors-->
+          <v-expansion-panel 
+            style="width: 100%" @click="showCurrentAllowedDates(service)"
+            v-for="service in services"
+            :key="service"
+          >
             <v-expansion-panel-header>{{ service }}</v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-row style="padding-left:20px; padding-right: 20px; display: flex; flex-direction: row; justify-content: center;">
@@ -17,7 +18,7 @@
                 </div>
                 <!--Mind the format to quote element in objects. `service` is a key here so do not quote with `''`-->
                 <v-date-picker
-                  v-model=servicesBody[service].chosenDate
+                  v-model="currentChosenDate"
                   :allowed-dates="allowedDates"
                   class="mt-4"
                   min="2023-01-01"
@@ -57,6 +58,7 @@ export default {
     currentAllowedDates: [],
     services: [],
     servicesBody: {},
+    currentChosenDate: '2023-06-08',
     bookedServices: { "title": "Food Support" },
   }),
 
@@ -69,7 +71,7 @@ export default {
     showServicesList: function() {
       console.log('loaded')
       // This is async and we need to wait for $store to be modified or v-for will be empty
-      this.$store.dispatch('service/showServicesList').then(() => {
+      this.$store.dispatch('service/fetchServicesList').then(() => {
         this.services = this.$store.state.service.services
         this.servicesBody = this.$store.state.service.servicesBody
       })
@@ -81,10 +83,16 @@ export default {
       Remember that in some primitive implementations, changes in data will not always reflect in the view.
       The time slots may need the `watch` feature to monitor the change of selected data and do update.
     */
-    fetchAllowedDates: function(service) {
+    showCurrentAllowedDates: function(service) {
       console.log(service) // The formal implementation will be an api call that uses this parameter
-      // Call the API to get current service's allowed dates.
-      this.currentAllowedDates = ['2023-06-02', '2023-06-05', '2023-06-10']
+      /*
+        Use vue to call the API to get current service's allowed dates.
+        The payload of dispatch should use JS object notation. It can be read as json on backend.
+      */
+      this.$store.dispatch('service/fetchCurrentAllowedDates', { 'service': service }).then(() => {
+        // ['2023-06-02', '2023-06-05', '2023-06-10']
+        this.currentAllowedDates = this.$store.state.service.currentAllowedDates
+      })
     },
 
     /*

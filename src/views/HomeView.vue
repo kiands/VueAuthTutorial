@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="margin-top: 12px; margin-bottom: 12px">
     <!--Head-->
     <v-row>
       <v-col cols="12" sm="12" md="8">

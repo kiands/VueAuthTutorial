@@ -1,46 +1,48 @@
 <template>
-  <v-container>
+  <v-container style="margin-top: 12px; margin-bottom: 12px">
     <v-row style="display: flex; justify-content: center;">
-      <v-card cols="12" style="margin-top: 10px; width: 80%">
-        <v-expansion-panels>
-          <!--Use v-for here to avoid UI errors-->
-          <v-expansion-panel 
-            style="width: 100%" @click="showCurrentAllowedDates(service)"
-            v-for="service in services"
-            :key="service"
-          >
-            <v-expansion-panel-header>{{ service }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-row style="padding-left:20px; padding-right: 20px; display: flex; flex-direction: row; justify-content: center;">
-                <div style="width:290px; padding-top: 16px; margin-bottom: 20px; margin-right: 20px">
-                  <v-btn>
-                  </v-btn>
-                </div>
-                <!--Mind the format to quote element in objects. `service` is a key here so do not quote with `''`-->
-                <v-date-picker
-                  v-model="currentChosenDate"
-                  :allowed-dates="allowedDates"
-                  class="mt-4"
-                  min="2023-01-01"
-                  max="2030-01-01"
-                ></v-date-picker>
-              </v-row>
-              <v-row>
-                <v-card>
-                  <v-card-text>Time Slots</v-card-text>
-                </v-card>
-              </v-row>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
+      <v-col>
+        <v-card cols="12" style="margin-top: 10px; width: 100%">
+          <v-expansion-panels>
+            <!--Use v-for here to avoid UI errors-->
+            <v-expansion-panel 
+              style="width: 100%" @click="showCurrentAllowedDates(service)"
+              v-for="service in services"
+              :key="service"
+            >
+              <v-expansion-panel-header>{{ service }}</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-row style="padding-left:20px; padding-right: 20px; display: flex; flex-direction: row; justify-content: center;">
+                  <div style="width:290px; padding-top: 16px; margin-bottom: 20px; margin-right: 20px">
+                    <v-btn>
+                    </v-btn>
+                  </div>
+                  <!--Mind the format to quote element in objects. `service` is a key here so do not quote with `''`-->
+                  <v-date-picker
+                    v-model="currentChosenDate"
+                    :allowed-dates="allowedDates"
+                    class="mt-4"
+                    min="2023-01-01"
+                    max="2030-01-01"
+                  ></v-date-picker>
+                </v-row>
+                <v-row>
+                  <v-card>
+                    <v-card-text>Time Slots</v-card-text>
+                  </v-card>
+                </v-row>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
 
-          <!--<v-expansion-panel>
-            <v-expansion-panel-header>Panel 2</v-expansion-panel-header>
-            <v-expansion-panel-content>
-              Some content
-            </v-expansion-panel-content>
-          </v-expansion-panel>-->
-        </v-expansion-panels>
-      </v-card>
+            <!--<v-expansion-panel>
+              <v-expansion-panel-header>Panel 2</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                Some content
+              </v-expansion-panel-content>
+            </v-expansion-panel>-->
+          </v-expansion-panels>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>

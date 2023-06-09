@@ -28,13 +28,19 @@
         <!--This div element contains the banner text and icons-->
         <div style="width: 95vw; display: flex; flex-direction: column; justify-content: space-between; align-items: center">
           <!--This will only show up on small and down screens-->
-          <div v-show="$vuetify.breakpoint.smAndDown">3473400000</div>
+          <div v-show="$vuetify.breakpoint.smAndDown">678-765-0482 & 678-926-3808</div>
           <div :class="$vuetify.breakpoint.smAndDown ? 'banner-smAndDown' : 'banner-normal'">
-            <div v-show="$vuetify.breakpoint.mdAndUp" style="display: flex; align-items: center">3473400000</div>
+            <div v-show="$vuetify.breakpoint.mdAndUp" style="display: flex; flex-direction: column; align-items: center">
+              <div>678-765-0482</div>
+              <div>&</div>
+              <div>678-926-3808</div>
+            </div>
             <v-btn icon @click.stop="drawer = !drawer" v-show="$vuetify.breakpoint.smAndDown">
               <v-icon>mdi-magnify</v-icon>
             </v-btn>
+            <v-spacer></v-spacer>
             <h1 :class="$vuetify.breakpoint.smAndDown ? 'small-text' : 'normal-text'">FACE FRIENDS FOUNDATION</h1>
+            <v-spacer></v-spacer>
             <!-- 添加一个按钮来打开登录对话框 -->
             <v-btn icon @click="dialog = true" v-show="$vuetify.breakpoint.mdAndUp">
               <v-icon icon>

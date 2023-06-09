@@ -8,8 +8,8 @@
 
 <script>
   export default {
-name: 'EventsView',
-// 这里是组件的JavaScript代码
+    name: 'EventsView',
+    // 这里是组件的JavaScript代码
   }
 </script>
 

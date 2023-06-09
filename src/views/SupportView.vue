@@ -8,8 +8,8 @@
 
 <script>
   export default {
-name: 'SupportView',
-// 这里是组件的JavaScript代码
+    name: 'SupportView',
+    // 这里是组件的JavaScript代码
   }
 </script>
 

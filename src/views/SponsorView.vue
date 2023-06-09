@@ -8,8 +8,8 @@
 
 <script>
   export default {
-name: 'SponsorView',
-// 这里是组件的JavaScript代码
+    name: 'SponsorView',
+    // 这里是组件的JavaScript代码
   }
 </script>
 

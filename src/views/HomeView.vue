@@ -110,18 +110,18 @@
           <v-card-text class="text-h4 font-weight-bold" style="display: flex; flex-direction: column; align-items: center">
             OUR SPONSORS
           </v-card-text>
-          <div style="width: 500px; margin-bottom: 12px; display: flex; flex-direction: row; justify-content: space-between; align-items: center">
+          <div style="width: 320px; margin-bottom: 12px; display: flex; flex-direction: row; justify-content: space-between; align-items: center">
             <div>
-              <v-img src="@/assets/Home/target.webp" max-width="50"></v-img>
+              <v-img src="@/assets/Home/target.png" max-width="60"></v-img>
             </div>
             <div>
-              <v-img src="@/assets/Home/hh.webp" max-width="100"></v-img>
+              <v-img src="@/assets/Home/hh.png" max-width="100"></v-img>
             </div>
             <div>
-              <v-img src="@/assets/Home/publix.webp" max-width="100"></v-img>
+              <v-img src="@/assets/Home/publix.png" max-width="70"></v-img>
             </div>
             <div>
-              <v-img src="@/assets/Home/sams.webp" max-width="100"></v-img>
+              <v-img src="@/assets/Home/sams.png" max-width="80"></v-img>
             </div>
           </div>
         </v-card>

@@ -8,8 +8,8 @@
 
 <script>
   export default {
-name: 'ContactView',
-// 这里是组件的JavaScript代码
+    name: 'ContactView',
+    // 这里是组件的JavaScript代码
   }
 </script>
 

@@ -8,8 +8,8 @@
 
 <script>
   export default {
-name: 'DonateView',
-// 这里是组件的JavaScript代码
+    name: 'DonateView',
+    // 这里是组件的JavaScript代码
   }
 </script>
 

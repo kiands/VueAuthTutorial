@@ -19,7 +19,7 @@
   </script-->
   <script>
     window.opener.postMessage(
-      { access_token: '{{ access_token }}', refresh_token: '{{ refresh_token }}', user_name: '{{ user_name }}' }, '*'
+      { access_token: '{{ access_token }}', refresh_token: '{{ refresh_token }}', user_id: '{{ user_id }}', user_name: '{{ user_name }}' }, '*'
     );
     window.close();
   </script>

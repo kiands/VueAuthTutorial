@@ -41,11 +41,13 @@ export default {
 
       // 监听 message 事件
       window.addEventListener('message', (event) => {
+        const user_id = event.data.user_id
         const user_name = event.data.user_name
         const access_token = event.data.access_token
         const refresh_token = event.data.refresh_token
         if (user_name && access_token && refresh_token) {
           // 使用 access_token 进行后续操作，例如将其存储到 Vuex state
+          console.log('User id:', user_id);
           console.log('User name:', user_name);
           console.log('Access token:', access_token);
           console.log('Refresh token:', refresh_token);
@@ -55,7 +57,7 @@ export default {
           //   'auth/login', { "oauth": true, "user_name": user_name, "token": access_token }
           // )
           this.$store.commit( // mutations belongs to commit
-            'auth/setUser', { "user_name": user_name, "token": access_token, "refresh_token": refresh_token }
+            'auth/setUser', { "user_id": user_id, "user_name": user_name, "token": access_token, "refresh_token": refresh_token }
           )
         } else {
           console.error('Failed to get access token');

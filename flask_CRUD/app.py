@@ -4,7 +4,10 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 import json
+import mysql.connector
 from datetime import datetime, timedelta
+import secrets
+import hashlib
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符串
@@ -12,6 +15,14 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)  # 设置访问令
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)  # 设置刷新令牌有效期为30天
 jwt = JWTManager(app)
 CORS(app)
+
+# 数据库配置
+config = {
+    "host": "localhost",        # 数据库地址
+    "user": "root",    # 数据库用户名
+    "passwd": "HZFmysql2023",  # 数据库密码
+    "database": "FaceFriendsFoundation"  # 数据库名称
+}
 
 # 简单的用于临时代替数据库的数组
 users = []
@@ -74,6 +85,10 @@ def login():
 # GitHub OAuth API
 @app.route('/api/github/auth', methods=['GET'])
 def github_oauth_login():
+    # connect to MySQL
+    conn = mysql.connector.connect(**config)
+    # create a cursor
+    cursor = conn.cursor()
     # get code from github
     args = request.args
     code = args.get("code")
@@ -97,14 +112,66 @@ def github_oauth_login():
     front_end_request_header = {'Authorization': f'Bearer {access_token}'}
     user_info_response = requests.get('https://api.github.com/user', headers=front_end_request_header)
     # Sometimes user_data['name'] is not set so we can use user_data['login'] instead
+    # logic for creating a new user or logging an existed user
     if user_info_response.status_code == 200:
         user_data = user_info_response.json()
-        # Generate a JWT token for the user
-        jwt_token = create_access_token(identity=user_data['login'])
-        # Generate a Refresh token for the user
-        refresh_token = create_refresh_token(identity=user_data['login'])
-        # This should cooperate with window.open to oauth provider at front end, shouldn't be a <a> tag
-        return render_template('success.html', user_name = user_data['login'], access_token = jwt_token, refresh_token = refresh_token)
+        # SQLs
+        sql_create = """
+            INSERT INTO users (nickname, email, password, created_at)
+            VALUES (%s, %s, %s, %s)
+        """
+
+        sql_read = """
+            SELECT * FROM users
+            WHERE nickname = %s
+        """
+
+        # check if this user exists
+        cursor.execute(sql_read, (user_data['login'],))
+        result = cursor.fetchall()
+
+        if result:
+            user_id = result[0][0]
+            nickname = result[0][1]
+            # Generate a JWT token for the user
+            jwt_token = create_access_token(identity=user_id)
+            # Generate a Refresh token for the user
+            refresh_token = create_refresh_token(identity=user_id)
+            # This should cooperate with window.open to oauth provider at front end, shouldn't be a <a> tag
+            return render_template('success.html', user_id = user_id, user_name = nickname, access_token = jwt_token, refresh_token = refresh_token)
+        else:
+            # data to process
+            nickname = user_data['login']
+            if user_data['email'] == None:
+                email = "no@no.com"
+            else:
+                email = user_data['email']
+            # for OAuth, generate a randomized password at 10 digits
+            password = secrets.token_urlsafe(10)
+            # generate a randomized salt
+            salt = secrets.token_bytes(16)
+            # combine the password and salt and then hash it
+            salted_password = salt + password.encode()
+            hashed_password = hashlib.sha256(salted_password).hexdigest()
+            created_at = datetime.now()
+            # execute the insertion
+            cursor.execute(sql_create, (nickname, email, hashed_password, created_at))
+            # commit the changes to database
+            conn.commit()
+
+            # after creating, check the new user's user_id because we need to identify our users
+            cursor.execute(sql_read, (nickname,))
+            user_id = cursor.fetchall()[0][0]
+            # close the cursor and connection
+            cursor.close()
+            conn.close()
+
+            # Generate a JWT token for the user
+            jwt_token = create_access_token(identity=user_id)
+            # Generate a Refresh token for the user
+            refresh_token = create_refresh_token(identity=user_id)
+            # This should cooperate with window.open to oauth provider at front end, shouldn't be a <a> tag
+            return render_template('success.html', user_id = user_id, user_name = nickname, access_token = jwt_token, refresh_token = refresh_token)
     else:
         return jsonify({'error': 'No such user'}), 401
 

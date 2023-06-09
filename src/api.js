@@ -62,10 +62,12 @@ apiClient.interceptors.request.use(async (config) => {
       return config
     } catch (error) {
       console.error('Error refreshing token', error)
+      auth.state.user_id = ''
       auth.state.user_name = ''
       auth.state.token = ''
       auth.state.refresh_token = ''
       auth.state.isLoggedIn = false
+      localStorage.removeItem('user_id')
       localStorage.removeItem('user_name')
       localStorage.removeItem('token')
       localStorage.removeItem('refresh_token')
@@ -74,10 +76,12 @@ apiClient.interceptors.request.use(async (config) => {
     }
   } else {
     console.error('Error refreshing token', error)
+    auth.state.user_id = ''
     auth.state.user_name = ''
     auth.state.token = ''
     auth.state.refresh_token = ''
     auth.state.isLoggedIn = false
+    localStorage.removeItem('user_id')
     localStorage.removeItem('user_name')
     localStorage.removeItem('token')
     localStorage.removeItem('refresh_token')

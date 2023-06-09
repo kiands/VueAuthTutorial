@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from './views/HomeView.vue'
+import About from './views/AboutView.vue'
 import Services from './views/ServicesView.vue'
+import Donate from './views/DonateView.vue'
+import Support from './views/SupportView.vue'
+import Events from './views/EventsView.vue'
+import Sponsor from './views/SponsorView.vue'
+import Contact from './views/ContactView.vue'
 import Register from './views/RegisterView.vue'
 import Login from './views/LoginView.vue'
-import About from './views/AboutView.vue'
 
 Vue.use(VueRouter)
 
@@ -15,25 +20,45 @@ const routes = [
     component: Home
   },
   {
+    path: '/about',
+    name: 'About',
+    component: About
+  },
+  {
     path: '/services',
     name: 'Services',
     component: Services
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: Register
+    path: '/donate',
+    name: 'Donate',
+    component: Donate
+  },
+  {
+    path: '/support',
+    name: 'Support',
+    component: Support
+  },
+  {
+    path: '/events',
+    name: 'Events',
+    component: Events
+  },
+  {
+    path: '/sponsor',
+    name: 'Sponsor',
+    component: Sponsor
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: Contact
   },
   {
     path: '/login',
     name: 'Login',
     component: Login
   },
-  {
-    path: '/about',
-    name: 'About',
-    component: About
-  }
 ]
 
 const router = new VueRouter({

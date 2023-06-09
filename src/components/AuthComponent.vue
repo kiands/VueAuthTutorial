@@ -1,8 +1,7 @@
 <template>
   <div style="height: 300px; display: flex; flex-direction: column; justify-content: space-between; align-items: center">
     <div style="height: 200px; width: 200px; display: flex; flex-direction: column; justify-content: space-around;">
-      <v-btn @click="GitHubOAuth">Login via GitHub</v-btn>
-      <v-btn @click="GitHubOAuth">Login via Google</v-btn>
+      <v-btn @click="GoogleOAuth">Login via Google</v-btn>
     </div>
     <div>
       <!--div v-if="isLoggedIn"-->
@@ -34,8 +33,8 @@ export default {
     //   console.log(1)
     // },
 
-    GitHubOAuth() {
-      const oauthUrl = 'https://github.com/login/oauth/authorize?client_id=89450a7c608bbd0300d8';
+    GoogleOAuth() {
+      const oauthUrl = 'https://accounts.google.com/o/oauth2/auth?client_id=998548956155-ghp88g04vfvr0qirkc9mnfnik8rp44u7.apps.googleusercontent.com&response_type=code&scope=openid%20email%20profile&redirect_uri=http://hzf.ngrok.dev/api/google/auth';
       // const oauthWindow = window.open(oauthUrl, '_blank', 'width=800,height=600');
       const oauthWindow = window.open(oauthUrl)
 

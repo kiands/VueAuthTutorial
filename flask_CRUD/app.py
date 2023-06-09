@@ -8,6 +8,7 @@ import mysql.connector
 from datetime import datetime, timedelta
 import secrets
 import hashlib
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符串
@@ -16,11 +17,22 @@ app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)  # 设置刷新令�
 jwt = JWTManager(app)
 CORS(app)
 
+# load .env file
+with open('../.env') as file:
+    for line in file:
+        key, value = line.strip().split('=', 1)
+        os.environ[key] = value
+
+# read environment parameters
+database_passwd = os.environ.get("DATABASE_PASSWORD")
+google_oauth_id = os.environ.get("GOOGLE_OAUTH_ID")
+google_oauth_secret = os.environ.get("GOOGLE_OAUTH_SECRET")
+
 # 数据库配置
 config = {
     "host": "localhost",        # 数据库地址
     "user": "root",    # 数据库用户名
-    "passwd": "HZFmysql2023",  # 数据库密码
+    "passwd": database_passwd,  # 数据库密码
     "database": "FaceFriendsFoundation"  # 数据库名称
 }
 
@@ -82,35 +94,34 @@ def login():
     else:
         return jsonify({'error': 'Invalid email or password'}), 401
 
-# GitHub OAuth API
-@app.route('/api/github/auth', methods=['GET'])
-def github_oauth_login():
+# Google OAuth API
+@app.route('/api/google/auth', methods=['GET'])
+def google_oauth_login():
     # connect to MySQL
     conn = mysql.connector.connect(**config)
     # create a cursor
     cursor = conn.cursor()
-    # get code from github
-    args = request.args
-    code = args.get("code")
-    # post necessary data to github to fetch user data
-    oauth_token_url = 'https://github.com/login/oauth/access_token'
-    oauth_token_request_payload = {
-        'client_id': '89450a7c608bbd0300d8',
-        'client_secret': 'cd2dbe4225c7020faa78b72e2126f430848d1360',
-        'code': code
+    # get code from google
+    code = request.args.get('code')
+    params = {
+        'code': code,
+        'client_id': google_oauth_id,
+        'client_secret': google_oauth_secret,
+        'redirect_uri': 'http://hzf.ngrok.dev/api/google/auth',
+        'grant_type': 'authorization_code'
     }
+    # post necessary data to google to fetch user data
+    oauth_token_uri = 'https://accounts.google.com/o/oauth2/token'
     # At the first time I wrongly thought I should use a redirect route.
     # But the next lines will bring back necessary data.
-    response = requests.post(
-        oauth_token_url,
-        data = oauth_token_request_payload,
-        headers = {'Accept': 'application/json'}
-    )
-    # Finally we can load the access token that allows the website to access user's GitHub information.
-    access_token = json.loads(response.text).get('access_token')
+    response = requests.post(oauth_token_uri, data=params)
+    token_response = response.json()
+    # Finally we can load the access token that allows the website to access user's Google information.
+    access_token = token_response.get('access_token')
     # Get user information
     front_end_request_header = {'Authorization': f'Bearer {access_token}'}
-    user_info_response = requests.get('https://api.github.com/user', headers=front_end_request_header)
+    userinfo_uri = 'https://openidconnect.googleapis.com/v1/userinfo'
+    user_info_response = requests.get(userinfo_uri, headers=front_end_request_header)
     # Sometimes user_data['name'] is not set so we can use user_data['login'] instead
     # logic for creating a new user or logging an existed user
     if user_info_response.status_code == 200:
@@ -123,14 +134,16 @@ def github_oauth_login():
 
         sql_read = """
             SELECT * FROM users
-            WHERE nickname = %s
+            WHERE email = %s
         """
 
         # check if this user exists
-        cursor.execute(sql_read, (user_data['login'],))
+        cursor.execute(sql_read, (user_data['email'],))
         result = cursor.fetchall()
 
+        # if the user's email already exists
         if result:
+            print('old user')
             user_id = result[0][0]
             nickname = result[0][1]
             # Generate a JWT token for the user
@@ -139,20 +152,20 @@ def github_oauth_login():
             refresh_token = create_refresh_token(identity=user_id)
             # This should cooperate with window.open to oauth provider at front end, shouldn't be a <a> tag
             return render_template('success.html', user_id = user_id, user_name = nickname, access_token = jwt_token, refresh_token = refresh_token)
+        # else, a new user
         else:
+            print('new user')
             # data to process
-            nickname = user_data['login']
-            if user_data['email'] == None:
-                email = "no@no.com"
-            else:
-                email = user_data['email']
-            # for OAuth, generate a randomized password at 10 digits
-            password = secrets.token_urlsafe(10)
+            nickname = user_data['name']
+            email = user_data['email']
+            # for OAuth, generate a randomized password at 8 digits
+            password = secrets.token_urlsafe(8)
             # generate a randomized salt
-            salt = secrets.token_bytes(16)
+            salt = secrets.token_bytes(8)
             # combine the password and salt and then hash it
             salted_password = salt + password.encode()
             hashed_password = hashlib.sha256(salted_password).hexdigest()
+            print(len(hashed_password))
             created_at = datetime.now()
             # execute the insertion
             cursor.execute(sql_create, (nickname, email, hashed_password, created_at))
@@ -160,7 +173,7 @@ def github_oauth_login():
             conn.commit()
 
             # after creating, check the new user's user_id because we need to identify our users
-            cursor.execute(sql_read, (nickname,))
+            cursor.execute(sql_read, (email,))
             user_id = cursor.fetchall()[0][0]
             # close the cursor and connection
             cursor.close()

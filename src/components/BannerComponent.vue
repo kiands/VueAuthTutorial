@@ -60,7 +60,9 @@
       </div>
       <v-card color="basil">
         <!--Don't know why class of md-and-up does not work-->
+        <!--Use `activaTab` to bind highlight tab after each refresh-->
         <v-tabs
+          v-model="activeTab"
           v-show="$vuetify.breakpoint.mdAndUp"
           background-color="transparent"
           grow
@@ -68,7 +70,7 @@
           <v-tab
             v-for="item in items"
             :key="item"
-            @click="$router.push(links[item])"
+            @click="routeTo(links[item])"
           >
             {{ item }}
           </v-tab>
@@ -119,6 +121,7 @@ export default {
 
   data () {
     return {
+      activeTab: 0,
       drawer: false,
       dialog: false,
       items: [
@@ -143,5 +146,31 @@ export default {
       }
     }
   },
+
+  watch: {
+    '$route': {
+      immediate: true,
+      handler(to, from) {
+        // 在这里根据当前路由来设置 activeTab 的值
+        // 例如，如果路由匹配 links 的某个元素，你可以找到它的索引并设置 activeTab
+        const index = this.items.findIndex(item => this.links[item] === to.path);
+        if (index >= 0) {
+          this.activeTab = index;
+        }
+      }
+    }
+  },
+
+  methods: {
+    // Avoid a stupid error: NavigationDuplicated: Avoided redundant navigation to current location
+    routeTo(route) {
+      this.$router.push(route).catch(error => {
+        if (error.name !== 'NavigationDuplicated') {
+          // 如果不是 NavigationDuplicated 错误，抛出错误
+          throw error;
+        }
+      });
+    }
+  }
 };
 </script>

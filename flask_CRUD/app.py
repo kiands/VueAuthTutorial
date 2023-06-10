@@ -3,7 +3,6 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, cr
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
-import json
 import mysql.connector
 from datetime import datetime, timedelta
 import secrets
@@ -146,7 +145,6 @@ def google_oauth_login():
 
         # if the user's email already exists
         if result:
-            print('old user')
             user_id = result[0][0]
             nickname = result[0][1]
             # Generate a JWT token for the user
@@ -157,7 +155,6 @@ def google_oauth_login():
             return render_template('success.html', user_id = user_id, user_name = nickname, access_token = jwt_token, refresh_token = refresh_token)
         # else, a new user
         else:
-            print('new user')
             # data to process
             nickname = user_data['name']
             email = user_data['email']

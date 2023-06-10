@@ -84,16 +84,27 @@
     },
     methods: {
       async submit() {
-        if ( this.name !== '' || this.email !== ''|| this.source !== '' || this.reason !== '' ) {
+        if (this.name !== '' && this.email !== '' && this.source !== '' && this.reason !== '') {
           await apiClient.post('contact', {
             'name': this.name,
             'email': this.email,
             'source': this.source,
             'reason': this.reason,
             'additional_information': this.additional_information
-          }
-        )} else {
-          console.log('please fill in required information')
+          }).then(response => {
+            // Handle success here
+            // response.data will contain the response data from the server
+            console.log('Success:', response.data)
+            // You can also use response.data to perform other actions, e.g. alert the user
+            // alert("Data successfully sent!")
+          }).catch(error => {
+            // Handle error here
+            console.log('Error:', error)
+            // You can also use error.message to perform other actions, e.g. alert the user
+            alert("There was an error sending the data.")
+          })
+        } else {
+          console.log('please fill in required information');
         }
       }
     }

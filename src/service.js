@@ -54,8 +54,19 @@ const actions = {
   async fetchTimeSlots({ commit }, serviceName) {
     try {
       const response = await apiClient.post('service_time_slots', serviceName)
-      // The specific received data should be parsed or it is not a JS object
-      const timeSlots = JSON.parse(response.data.timeSlots)
+      // If the value of the payload is a string, we need JSON.parse(). If it was a JSON in backend, there's no need.
+      const timeSlots = response.data.timeSlots
+      commit('setTimeSlots', { 'timeSlots': timeSlots })
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
+  async bookService({ commit }, serviceInformation) {
+    try {
+      // Post and book, then whatever the result is, we need to update the time slots using the response data.
+      const response = await apiClient.post('book_service', serviceInformation)
+      const timeSlots = response.data.timeSlots
       commit('setTimeSlots', { 'timeSlots': timeSlots })
     } catch (error) {
       console.log(error)

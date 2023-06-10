@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, cr
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
+import json
 import mysql.connector
 from datetime import datetime, timedelta
 import secrets
@@ -251,7 +252,7 @@ def currentAllowedDates():
     result = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify({ 'timeSlots': result[0][0] })
+    return jsonify({ 'timeSlots': json.loads(result[0][0]) })
 
 @app.route('/api/contact', methods=['POST'])
 def contact():
@@ -266,7 +267,6 @@ def contact():
         VALUES (%s, %s, %s, %s, %s)
     """
     conn = mysql.connector.connect(**config)
-    print(name)
     cursor = conn.cursor()
     cursor.execute(sql_create, (name, email, source, reason, additional_information,))
     # For insert into, we need to commit it.
@@ -274,6 +274,53 @@ def contact():
     cursor.close()
     conn.close()
     return jsonify({"msg": "Received"}), 200
+
+# This function has an atomic or consistency problem. Not serious if the current is small. Need ti be discussed.
+@app.route('/api/book_service', methods=['POST'])
+def bookService():
+    data = request.get_json()
+    user_id = data['user_id']
+    service_name = data['service_name']
+    date = data['date']
+    time = data['time']
+    sql_read = """
+        select time_slots from services
+        where service_name = %s
+    """
+    json_path = '$."{}"."{}"'.format(date, time)
+    sql_update = """
+        UPDATE services
+        SET time_slots = JSON_SET(time_slots, %s, %s)
+        WHERE service_name = %s
+    """
+    sql_create = """
+        INSERT INTO booked_services (user_id, service_name, date, time)
+        VALUES (%s, %s, %s, %s)
+    """
+
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read, (service_name,))
+    result = cursor.fetchall()
+    remaining = json.loads(result[0][0])[date][time]
+    if remaining >= 1:
+        # Update the database and return modified `timeSlots` directly because they just look the same.
+        cursor.execute(sql_update, (json_path, remaining - 1, service_name))
+        conn.commit()
+        new_result = json.loads(result[0][0])
+        # This mutation is inplace
+        new_result[date][time] = remaining - 1
+        # Then insert a new record into booked_services
+        cursor.execute(sql_create, (user_id, service_name, date, time,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({ "timeSlots": new_result })
+    else:
+        # When the newest `timeSlots` is unavailable, return the newest query result directly to force an update.
+        cursor.close()
+        conn.close()
+        return jsonify({ "timeSlots": json.loads(result[0][0]) })
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

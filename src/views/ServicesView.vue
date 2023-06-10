@@ -37,9 +37,14 @@
                     :key="time"
                     cols="12" sm="6" md="4" lg="4" xl="4"
                   >
-                    <v-card style="display: flex; flex-direction: row; align-items: center">
+                    <!--Automatically hide when the remaining positions of that time period becomes 0-->
+                    <v-card
+                      style="display: flex; flex-direction: row; align-items: center"
+                      v-if="timeSlots[currentChosenDate][time] > 0"
+                    >
                       <v-card-text>{{ time }}</v-card-text>
-                      <v-btn style="margin-right: 16px">Book</v-btn>
+                      <v-card-text>remaining: {{ timeSlots[currentChosenDate][time] }}</v-card-text>
+                      <v-btn style="margin-right: 16px" @click="bookService(service, time)">Book</v-btn>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -188,6 +193,15 @@ export default {
     updateDailySlots(date) {
       this.dailySlots = Object.keys(this.timeSlots[date])
       console.log(this.dailySlots)
+    },
+
+    bookService(service, time) {
+      this.$store.dispatch('service/bookService', { 'user_id': this.$store.state.auth.user_id, 'service_name': service, 'date': this.currentChosenDate, 'time': time }).then(() => {
+        // Update time slots when a service is booked
+        this.timeSlots = this.$store.state.service.timeSlots
+        // Then update daily slots
+        this.updateDailySlots(this.currentChosenDate)
+      })
     }
   },
 }

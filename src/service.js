@@ -14,8 +14,8 @@ Vue.use(Vuex)
 
 const state = {
   services: [],
-  servicesBody: [],
-  currentAllowedDates: [],
+  // servicesBody: {},
+  timeSlots: '',
   currentChosenDate: '',
   bookedServices: []
 }
@@ -24,14 +24,14 @@ const mutations = {
   // This is for the expansion panels
   setServicesList(state, services) {
     state.services = services.services
-    state.servicesBody = services.servicesBody
+    // state.servicesBody = services.servicesBody
   },
-  setService(state, service) {
-    state.bookedServices = service.bookedServices
-  },
-  setCurrentAllowedDates(state, datesInformation) {
+  setTimeSlots(state, datesInformation) {
     // An array
-    state.currentAllowedDates = datesInformation.currentAllowedDates
+    state.timeSlots = datesInformation.timeSlots
+  },
+  setBookedServices(state, service) {
+    state.bookedServices = service.bookedServices
   }
 }
 
@@ -42,19 +42,21 @@ const actions = {
       const response = await apiClient.get('services')
       // the key in python's storage is username
       const services = response.data.services
-      const servicesBody = response.data.servicesBody
+      // const servicesBody = response.data.servicesBody
       // this notation is like dispatch('login', user)
-      commit('setServicesList', { 'services': services, 'servicesBody': servicesBody })
+      // commit('setServicesList', { 'services': services, 'servicesBody': servicesBody })
+      commit('setServicesList', { 'services': services })
     } catch (error) {
       console.log(error)
       throw error
     }
   },
-  async fetchCurrentAllowedDates({ commit }, serviceName) {
+  async fetchTimeSlots({ commit }, serviceName) {
     try {
-      const response = await apiClient.post('service-current-allowed-dates', serviceName)
-      const currentAllowedDates = response.data.currentAllowedDates
-      commit('setCurrentAllowedDates', { 'currentAllowedDates': currentAllowedDates })
+      const response = await apiClient.post('service_time_slots', serviceName)
+      // JSON should be parsed or it is not a JS object
+      const timeSlots = JSON.parse(response.data.timeSlots)
+      commit('setTimeSlots', { 'timeSlots': timeSlots })
     } catch (error) {
       console.log(error)
       throw error

@@ -6,7 +6,7 @@
           <v-expansion-panels>
             <!--Use v-for here to avoid UI errors-->
             <v-expansion-panel 
-              style="width: 100%" @click="showCurrentAllowedDates(service)"
+              style="width: 100%" @click="showTimeSlots(service)"
               v-for="service in services"
               :key="service"
             >
@@ -57,10 +57,10 @@ export default {
   name: 'ServicesView',
   // 这里是组件的JavaScript代码
   data: () => ({
-    currentAllowedDates: [],
+    timeSlots: '',
     services: [],
-    servicesBody: {},
-    currentChosenDate: '2023-06-08',
+    // servicesBody: {},
+    currentChosenDate: '',
     bookedServices: { "title": "Food Support" },
   }),
 
@@ -71,11 +71,10 @@ export default {
 
   methods: {
     showServicesList: function() {
-      console.log('loaded')
       // This is async and we need to wait for $store to be modified or v-for will be empty
       this.$store.dispatch('service/fetchServicesList').then(() => {
         this.services = this.$store.state.service.services
-        this.servicesBody = this.$store.state.service.servicesBody
+        // this.servicesBody = this.$store.state.service.servicesBody
       })
     },
     /*
@@ -85,15 +84,14 @@ export default {
       Remember that in some primitive implementations, changes in data will not always reflect in the view.
       The time slots may need the `watch` feature to monitor the change of selected data and do update.
     */
-    showCurrentAllowedDates: function(service) {
+    showTimeSlots: function(service) {
       console.log(service) // The formal implementation will be an api call that uses this parameter
       /*
         Use vue to call the API to get current service's allowed dates.
         The payload of dispatch should use JS object notation. It can be read as json on backend.
       */
-      this.$store.dispatch('service/fetchCurrentAllowedDates', { 'service': service }).then(() => {
-        // ['2023-06-02', '2023-06-05', '2023-06-10']
-        this.currentAllowedDates = this.$store.state.service.currentAllowedDates
+      this.$store.dispatch('service/fetchTimeSlots', { 'service': service }).then(() => {
+        this.timeSlots = this.$store.state.service.timeSlots
       })
     },
 
@@ -104,7 +102,7 @@ export default {
     */
     allowedDates: function(val) {
       // Do not pass currentAllowedDates to this function because vue will not do this, use `this.` -- ChatGPT
-      return this.currentAllowedDates.includes(val)
+      return Object.keys(this.timeSlots).includes(val)
     }
   },
 }

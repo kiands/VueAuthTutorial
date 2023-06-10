@@ -12,8 +12,8 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符串
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)  # 设置访问令牌有效期为15分钟
-app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)  # 设置刷新令牌有效期为30天
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)  # 设置访问令牌有效期为15分钟
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)  # 设置刷新令牌有效期为7天
 jwt = JWTManager(app)
 CORS(app)
 
@@ -140,6 +140,9 @@ def google_oauth_login():
         # check if this user exists
         cursor.execute(sql_read, (user_data['email'],))
         result = cursor.fetchall()
+        # close the cursor and connection
+        cursor.close()
+        conn.close()
 
         # if the user's email already exists
         if result:
@@ -216,24 +219,42 @@ def logout():
 # 测试服务项目API的路由
 @app.route('/api/services', methods=['GET'])
 def services():
+    sql_read = """
+        select service_name from services
+    """
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read)
+    result = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    services = []
+    for service in result:
+        services.append(service[0])
     return jsonify({
-        'services': ['PYFS', 'PYTS'],
-        'servicesBody': {
-            "PYFS": { "title": "PYFS" },
-            "PYTS": { "title": "PYTS" }
-        }
+        'services': services,
+        # 'servicesBody': {
+        #     "PYFS": { "title": "PYFS" },
+        #     "PYTS": { "title": "PYTS" }
+        # }
     })
 
 # 测试服务项目允许的时间段API的路由
-@app.route('/api/service-current-allowed-dates', methods=['POST'])
+@app.route('/api/service_time_slots', methods=['POST'])
 def currentAllowedDates():
     data = request.get_json()
     service = data['service']
-    if service == 'PYFS':
-        response = ['2023-06-08', '2023-06-09', '2023-06-19', '2023-06-20', '2023-06-21']
-    else:
-        response = ['2023-06-06', '2023-06-07', '2023-06-08']
-    return jsonify({ 'currentAllowedDates': response })
+    sql_read = """
+        SELECT time_slots FROM services
+        WHERE service_name = %s
+    """
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read, (service,))
+    result = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify({ 'timeSlots': result[0][0] })
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

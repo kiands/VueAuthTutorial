@@ -14,7 +14,7 @@ app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符�
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)  # 设置访问令牌有效期为15分钟
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)  # 设置刷新令牌有效期为7天
 jwt = JWTManager(app)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # load .env file
 with open('../.env') as file:
@@ -238,6 +238,7 @@ def services():
 
 # 测试服务项目允许的时间段API的路由
 @app.route('/api/service_time_slots', methods=['POST'])
+@jwt_required()
 def currentAllowedDates():
     data = request.get_json()
     service = data['service']
@@ -252,6 +253,28 @@ def currentAllowedDates():
     cursor.close()
     conn.close()
     return jsonify({ 'timeSlots': result[0][0] })
+
+@app.route('/api/contact', methods=['POST'])
+def contact():
+    data = request.get_json()
+    name = data['name']
+    email = data['email']
+    source = data['source']
+    reason = data['reason']
+    additional_information = data['additional_information']
+    sql_create = """
+        INSERT INTO contacts (name, email, source, reason, additional_information)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    conn = mysql.connector.connect(**config)
+    print(name)
+    cursor = conn.cursor()
+    cursor.execute(sql_create, (name, email, source, reason, additional_information,))
+    # For insert into, we need to commit it.
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"msg": "Received"}), 200
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

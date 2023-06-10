@@ -132,7 +132,8 @@ export default {
         'Support',
         'Events',
         'Become a Sponsor',
-        'More',
+        'Contact Us',
+        'More'
       ],
       links: {
         'Home': '/',
@@ -142,7 +143,8 @@ export default {
         'Support': '/support',
         'Events': '/events',
         'Become a Sponsor': '/sponsor',
-        'More': '/more',
+        'Contact Us': '/contact'
+        // 'More': '/more'
       }
     }
   },

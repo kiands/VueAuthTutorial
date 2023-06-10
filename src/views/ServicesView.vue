@@ -33,7 +33,6 @@
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
-
             <!--<v-expansion-panel>
               <v-expansion-panel-header>Panel 2</v-expansion-panel-header>
               <v-expansion-panel-content>
@@ -44,6 +43,65 @@
         </v-card>
       </v-col>
     </v-row>
+    <!--Board-->
+    <v-row style="margin-top:24px">
+      <v-col>
+        <div>ADDITIONAL PROGRAMS</div>
+      </v-col>
+    </v-row>
+    <v-row style="display: flex; flex-direction: row; justify-content: center">
+      <v-col cols="12" sm="6" md="6" lg="4" xl="4">
+        <v-card style="height: 100%">
+          <v-card-title>International Volunteer</v-card-title>
+          <v-img src="@/assets/Services/international.webp" />
+          <v-card-text>How would you like to volunteer to serve in Jamaica helping those in need? Well if the answer is "Yes, I would love to volunteer in Jamaica and yet still experience the beauty, the magnificence of its culture, its music, its food, and its wonders", then here is your opportunity! Most, if not all, of your expenses from airfare, to accommodation, to transportation may be tax deductible.</v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="6" md="6" lg="4" xl="4">
+        <v-card style="height: 100%">
+          <v-card-title>Face Friends Mentors</v-card-title>
+          <v-img src="@/assets/Services/mentor.webp" />
+          <v-card-text>When you were young, did you know how to study for a test or make plans for college? Do you remember wanting your first car or looking for a part-time job? Simple things that may seem easy or straightforward to you now may be a complete mystery to a young person. 1 in 3 young people will grow up without having a mentor</v-card-text>
+          <v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header>Show More</v-expansion-panel-header>
+              <v-expansion-panel-content>either through a formal mentoring program or informally through a family friend or community member leaving them disconnected from a critical resource to help with these very things.</v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="6" md="6" lg="4" xl="4">
+        <v-card style="height: 100%">
+          <v-card-title>NEW EYES GLASSES PROGRAM</v-card-title>
+          <v-img src="@/assets/Services/glasses.webp" />
+          <v-card-text>New Eyes is expanding its mission and we encourage all health advocates in your state to be made aware of our program so that low-income children and adults can obtain new eyeglasses and the clear vision they need to build better lives. There is NO charge for New Eyes services.  There is no sharing of information. There are no citizenship</v-card-text>
+          <v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header>Show More</v-expansion-panel-header>
+              <v-expansion-panel-content>questions. There are no age restrictions.  We operate our program with donated funds to purchase new prescription eyeglasses for people living at 250% or less of the Federal Poverty Guidelines. Children who receive free or reduced-fee school lunches are automatically eligible for our program (and they receive two pairs of glasses each!). We just require that the individual hold a current eye examination prescription (dated within last 24 months). Please spread the word about our service in your community and among your organization!  If you belong to a professional network or Facebook group for organizations that could also use help with free eyeglasses we would urge you to share our details. You may email us with any questions or feedback about our program. We are here to help you in the important work you do – and we are always happy to hear from you!</v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" xl="12"><v-img src="@/assets/Services/background.webp" /></v-col>
+      <v-col cols="12" xs="12" md="8">
+        <v-card style="display: flex; flex-direction: column; align-items: center">
+          <v-card-title>Additional Information</v-card-title>
+          <v-card-text>The need for food security in Sugar Hill Georgia and Saint Mary Jamaica and the wider Georgia and Jamaican communities are not just great but urgent, since this devastating Covid 19 pandemic many families who would not otherwise need food assistance find themselves in need of food to feed their families. Face Friends Foundation are looking for grocery stores, food suppliers to come on board and donate fresh food, dry foods and canned food. We are also looking for frozen foods, fresh meats and vegetables, bottled water and juices. Please call us at 678-765-0482 and tell us how you can help.</v-card-text>
+          <v-card-text>So you may be wondering, what are some of the items you can donate? Here is a list of our needs: shelf-stable items such as cereal, lentils, rice, canned vegetables, macaroni & cheese boxes, canned meats, dried or canned beans, pasta, and canned and soups. We also accept fresh items such as proteins like chicken, beef, pork, goat, fish, and lamb, dairy products, fresh fruits and vegetables, bakery goods, and lots more-just ask us.</v-card-text>
+          <v-card-text>The Face Friends Foundation Incorporated was established to meet the short term needs specifically of the residents of Georgia and Jamaica. If you can donate items, please call us at 678-765-0482 for our Georgia office or 876-677-9019 for the Jamaican office and we will point you in the right direction. If you are living in Jamaica and need services we are opened Mondays between 6pm-8pm, Thursdays between 11am-2pm and Saturday 11am-4pm.</v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" xs="12" md="4">
+        <v-card style="padding-bottom: 24px; height: 100%; display: flex; flex-direction: column; align-items: center">
+          <v-card-title>Learn More</v-card-title>
+          <v-card-text>Face Friends Foundation Incorporated will have three major programs every year: first our Annual Easter Bun and Cheese Box, second our Summer Backpack and School Supplies Giveaway, and lastly our  Holiday Dinner Food Box, so don’t forget to register for these programs.</v-card-text>
+          <v-btn>Find Out More</v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -51,7 +109,8 @@
 </style>
 
 <script>
-import apiClient from "@/api.js" // May not be used if no need to test functions
+// May not be used if no need to test functions
+// import apiClient from "@/api.js"
 
 export default {
   name: 'ServicesView',

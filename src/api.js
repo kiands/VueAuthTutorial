@@ -1,6 +1,5 @@
 import axios from "axios"
 import auth from "@/auth.js"
-import service from "@/service.js"
 import jwtDecode from "jwt-decode"
 
 const apiClient = axios.create({
@@ -19,7 +18,7 @@ const refreshClient = axios.create({
 })
 
 // 豁免JWT token的URL列表
-const exemptedApiList = ['register', 'login', 'services']
+const exemptedApiList = ['register', 'login', 'services', 'contact']
 
 const isTokenExpired = (token) => {
   const decoded = jwtDecode(token)

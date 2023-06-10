@@ -14,7 +14,7 @@ Vue.use(Vuex)
 
 const state = {
   services: [],
-  // servicesBody: {},
+  service_descriptions: {},
   timeSlots: '',
   currentChosenDate: '',
   bookedServices: []
@@ -24,7 +24,7 @@ const mutations = {
   // This is for the expansion panels
   setServicesList(state, services) {
     state.services = services.services
-    // state.servicesBody = services.servicesBody
+    state.service_descriptions = services.service_descriptions
   },
   setTimeSlots(state, datesInformation) {
     // An array
@@ -42,10 +42,10 @@ const actions = {
       const response = await apiClient.get('services')
       // the key in python's storage is username
       const services = response.data.services
-      // const servicesBody = response.data.servicesBody
+      // Flask automatically parsed this into JSON. Has something different with things in `fetchTimeSlots()`
+      const service_descriptions = response.data.service_descriptions
       // this notation is like dispatch('login', user)
-      // commit('setServicesList', { 'services': services, 'servicesBody': servicesBody })
-      commit('setServicesList', { 'services': services })
+      commit('setServicesList', { 'services': services, 'service_descriptions': service_descriptions })
     } catch (error) {
       console.log(error)
       throw error
@@ -54,7 +54,7 @@ const actions = {
   async fetchTimeSlots({ commit }, serviceName) {
     try {
       const response = await apiClient.post('service_time_slots', serviceName)
-      // JSON should be parsed or it is not a JS object
+      // The specific received data should be parsed or it is not a JS object
       const timeSlots = JSON.parse(response.data.timeSlots)
       commit('setTimeSlots', { 'timeSlots': timeSlots })
     } catch (error) {

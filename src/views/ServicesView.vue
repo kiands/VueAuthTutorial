@@ -10,26 +10,38 @@
               v-for="service in services"
               :key="service"
             >
-              <v-expansion-panel-header>{{ service }}</v-expansion-panel-header>
+              <v-expansion-panel-header><strong>{{ service }}</strong></v-expansion-panel-header>
               <v-expansion-panel-content>
-                <v-row style="padding-left:20px; padding-right: 20px; display: flex; flex-direction: row; justify-content: center;">
-                  <div style="width:290px; padding-top: 16px; margin-bottom: 20px; margin-right: 20px">
-                    <v-btn>
-                    </v-btn>
-                  </div>
+                <v-row style="padding-left:20px; padding-right: 20px; display: flex; flex-direction: row; justify-content: space-around;">
+                  <v-col style="display: flex; flex-direction: column; align-items: center">
+                    <div style="width: 100%; padding-top: 16px; margin-bottom: 20px; margin-right: 20px">
+                      <!--Cannot use this.service_descriptions here-->
+                      <v-card-text style="font-size: 20px;">{{ service_descriptions[service] }}</v-card-text>
+                    </div>
+                    <v-btn>Refresh Dates</v-btn>
+                  </v-col>
                   <!--Mind the format to quote element in objects. `service` is a key here so do not quote with `''`-->
-                  <v-date-picker
-                    v-model="currentChosenDate"
-                    :allowed-dates="allowedDates"
-                    class="mt-4"
-                    min="2023-01-01"
-                    max="2030-01-01"
-                  ></v-date-picker>
+                  <v-col style="display: flex; justify-content: center">
+                    <v-date-picker
+                      v-model="currentChosenDate"
+                      :allowed-dates="allowedDates"
+                      class="mt-4"
+                      min="2023-01-01"
+                      max="2030-01-01"
+                    ></v-date-picker>
+                  </v-col>
                 </v-row>
                 <v-row>
-                  <v-card>
-                    <v-card-text>Time Slots</v-card-text>
-                  </v-card>
+                  <v-col
+                    v-for="time in dailySlots"
+                    :key="time"
+                    cols="12" sm="6" md="4" lg="4" xl="4"
+                  >
+                    <v-card style="display: flex; flex-direction: row; align-items: center">
+                      <v-card-text>{{ time }}</v-card-text>
+                      <v-btn style="margin-right: 16px">Book</v-btn>
+                    </v-card>
+                  </v-col>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -117,8 +129,9 @@ export default {
   // 这里是组件的JavaScript代码
   data: () => ({
     timeSlots: '',
+    dailySlots: [], // This only exists in ServicesView.
     services: [],
-    // servicesBody: {},
+    service_descriptions: {},
     currentChosenDate: '',
     bookedServices: { "title": "Food Support" },
   }),
@@ -128,12 +141,20 @@ export default {
     this.showServicesList()
   },
 
+  watch: {
+    // 每当 currentChosenDate 改变时，这个函数就会执行
+    currentChosenDate(newVal, oldVal) {
+      // 在这里调用你想要执行的函数
+      this.updateDailySlots(newVal)
+    }
+  },
+
   methods: {
     showServicesList: function() {
       // This is async and we need to wait for $store to be modified or v-for will be empty
       this.$store.dispatch('service/fetchServicesList').then(() => {
         this.services = this.$store.state.service.services
-        // this.servicesBody = this.$store.state.service.servicesBody
+        this.service_descriptions = this.$store.state.service.service_descriptions
       })
     },
     /*
@@ -162,6 +183,11 @@ export default {
     allowedDates: function(val) {
       // Do not pass currentAllowedDates to this function because vue will not do this, use `this.` -- ChatGPT
       return Object.keys(this.timeSlots).includes(val)
+    },
+
+    updateDailySlots(date) {
+      this.dailySlots = Object.keys(this.timeSlots[date])
+      console.log(this.dailySlots)
     }
   },
 }

@@ -217,7 +217,7 @@ def logout():
 @app.route('/api/services', methods=['GET'])
 def services():
     sql_read = """
-        select service_name from services
+        select service_name,service_description from services
     """
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
@@ -226,14 +226,13 @@ def services():
     cursor.close()
     conn.close()
     services = []
-    for service in result:
-        services.append(service[0])
+    service_descriptions = {}
+    for i in range(0, len(result)):
+        services.append(result[i][0])
+        service_descriptions[result[i][0]] = result[i][1]
     return jsonify({
         'services': services,
-        # 'servicesBody': {
-        #     "PYFS": { "title": "PYFS" },
-        #     "PYTS": { "title": "PYTS" }
-        # }
+        'service_descriptions': service_descriptions
     })
 
 # 测试服务项目允许的时间段API的路由

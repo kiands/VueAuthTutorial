@@ -34,7 +34,7 @@ export default {
     // },
 
     GoogleOAuth() {
-      const oauthUrl = 'https://accounts.google.com/o/oauth2/auth?client_id=998548956155-ghp88g04vfvr0qirkc9mnfnik8rp44u7.apps.googleusercontent.com&response_type=code&scope=openid%20email%20profile&redirect_uri=http://hzf.ngrok.dev/api/google/auth';
+      const oauthUrl = 'https://accounts.google.com/o/oauth2/auth?client_id=998548956155-pk7d91gdk0pevvub0m6u7ffrn9hqbnb5.apps.googleusercontent.com&response_type=code&scope=openid%20email%20profile&redirect_uri=https://hzf.ngrok.dev/api/google/oauth';
       // const oauthWindow = window.open(oauthUrl, '_blank', 'width=800,height=600');
       const oauthWindow = window.open(oauthUrl)
 

@@ -3,7 +3,7 @@ import auth from "@/auth.js"
 import jwtDecode from "jwt-decode"
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api/",
+  baseURL: "https://hzf.ngrok.dev/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -11,7 +11,7 @@ const apiClient = axios.create({
 
 // 这个专用的axios实例是用来防止apiClient上设计的拦截器在需要刷新token时触发循环而设计的
 const refreshClient = axios.create({
-  baseURL: "http://localhost:8000/api/",
+  baseURL: "https://hzf.ngrok.dev/api/",
   headers: {
     "Content-Type": "application/json",
   },

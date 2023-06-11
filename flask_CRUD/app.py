@@ -27,6 +27,9 @@ with open('../.env') as file:
 database_passwd = os.environ.get("DATABASE_PASSWORD")
 google_oauth_id = os.environ.get("GOOGLE_OAUTH_ID")
 google_oauth_secret = os.environ.get("GOOGLE_OAUTH_SECRET")
+google_oauth_redirect_uri = os.environ.get("GOOGLE_OAUTH_REDIRECT_URI")
+google_oauth_token_uri = os.environ.get("GOOGLE_OAUTH_TOKEN_URI")
+google_userinfo_uri = os.environ.get("GOOGLE_USER_INFO_URI")
 
 # 数据库配置
 config = {
@@ -95,7 +98,7 @@ def login():
         return jsonify({'error': 'Invalid email or password'}), 401
 
 # Google OAuth API
-@app.route('/api/google/auth', methods=['GET'])
+@app.route('/api/google/oauth', methods=['GET'])
 def google_oauth_login():
     # connect to MySQL
     conn = mysql.connector.connect(**config)
@@ -107,25 +110,23 @@ def google_oauth_login():
         'code': code,
         'client_id': google_oauth_id,
         'client_secret': google_oauth_secret,
-        'redirect_uri': 'http://hzf.ngrok.dev/api/google/auth',
+        'redirect_uri': google_oauth_redirect_uri,
         'grant_type': 'authorization_code'
     }
     # post necessary data to google to fetch user data
-    oauth_token_uri = 'https://accounts.google.com/o/oauth2/token'
     # At the first time I wrongly thought I should use a redirect route.
     # But the next lines will bring back necessary data.
-    response = requests.post(oauth_token_uri, data=params)
+    response = requests.post(google_oauth_token_uri, data=params)
     token_response = response.json()
     # Finally we can load the access token that allows the website to access user's Google information.
     access_token = token_response.get('access_token')
     # Get user information
     front_end_request_header = {'Authorization': f'Bearer {access_token}'}
-    userinfo_uri = 'https://openidconnect.googleapis.com/v1/userinfo'
-    user_info_response = requests.get(userinfo_uri, headers=front_end_request_header)
+    google_user_info_response = requests.get(google_userinfo_uri, headers=front_end_request_header)
     # Sometimes user_data['name'] is not set so we can use user_data['login'] instead
     # logic for creating a new user or logging an existed user
-    if user_info_response.status_code == 200:
-        user_data = user_info_response.json()
+    if google_user_info_response.status_code == 200:
+        user_data = google_user_info_response.json()
         # SQLs
         sql_create = """
             INSERT INTO users (nickname, email, password, created_at)

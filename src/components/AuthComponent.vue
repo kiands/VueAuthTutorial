@@ -1,13 +1,15 @@
 <template>
-  <div style="height: 300px; display: flex; flex-direction: column; justify-content: space-between; align-items: center">
-    <div style="height: 200px; width: 200px; display: flex; flex-direction: column; justify-content: space-around;">
+  <div style="height: 260px; display: flex; flex-direction: column; justify-content: center; align-items: center">
+    <div
+      v-if="!this.$store.state.auth.isLoggedIn"
+      style="height: 100px; width: 200px; display: flex; flex-direction: column; justify-content: space-around;"
+    >
       <v-btn @click="GoogleOAuth">Login via Google</v-btn>
     </div>
     <div>
       <!--div v-if="isLoggedIn"-->
-      <div v-if="this.$store.state.auth.isLoggedIn">
-        <p>Hello, {{ this.$store.state.auth.user_name }}</p>
-        <v-btn v-on:click="jwtAccess">JWT Access</v-btn>
+      <div v-if="this.$store.state.auth.isLoggedIn" style="display: flex; flex-direction: column; align-items: center">
+        <p>Hello, {{ this.$store.state.auth.user_name }}!</p>
         <v-btn v-on:click="logout">Logout</v-btn>
       </div>
       <div v-else>
@@ -65,14 +67,6 @@ export default {
         // 移除事件监听器
         window.removeEventListener('message', this);
       });
-    },
-
-    // Actually we should use vuex to do actions instead of calling them directly
-    async jwtAccess() {
-      // console.log(this.$store.state.auth.user)
-      // baseURL is configured so there's no need to use full api path
-      const response = await apiClient.get("test")
-      console.log(response.data)
     },
 
     // This component calls Vuex, Vuex uses the interceptor named apiClient

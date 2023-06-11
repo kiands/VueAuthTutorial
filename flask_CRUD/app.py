@@ -141,9 +141,7 @@ def google_oauth_login():
         # check if this user exists
         cursor.execute(sql_read, (user_data['email'],))
         result = cursor.fetchall()
-        # close the cursor and connection
-        cursor.close()
-        conn.close()
+        # Don't close the cursor and the connection here.
 
         # if the user's email already exists
         if result:
@@ -154,6 +152,9 @@ def google_oauth_login():
             # Generate a Refresh token for the user
             refresh_token = create_refresh_token(identity=user_id)
             # This should cooperate with window.open to oauth provider at front end, shouldn't be a <a> tag
+            # close the cursor and connection
+            cursor.close()
+            conn.close()
             return render_template('success.html', user_id = user_id, user_name = nickname, access_token = jwt_token, refresh_token = refresh_token)
         # else, a new user
         else:

@@ -170,11 +170,12 @@ export default {
       The time slots may need the `watch` feature to monitor the change of selected data and do update.
     */
     showTimeSlots: function(service) {
-      console.log(service) // The formal implementation will be an api call that uses this parameter
+      // console.log(service) // The formal implementation will be an api call that uses this parameter
       /*
         Use vue to call the API to get current service's allowed dates.
         The payload of dispatch should use JS object notation. It can be read as json on backend.
       */
+      this.currentChosenDate = ''; // Each time the user clicks another service, clear existed currentChosenDate.
       this.$store.dispatch('service/fetchTimeSlots', { 'service': service }).then(() => {
         this.timeSlots = this.$store.state.service.timeSlots
       })
@@ -191,8 +192,13 @@ export default {
     },
 
     updateDailySlots(date) {
-      this.dailySlots = Object.keys(this.timeSlots[date])
-      console.log(this.dailySlots)
+      // This if-else is designed for clearing old service's dailySlots when the user clicks a new service.
+      if (date === '') {
+        this.dailySlots = []
+      } else {
+        this.dailySlots = Object.keys(this.timeSlots[date])
+        console.log(this.dailySlots)
+      }
     },
 
     bookService(service, time) {

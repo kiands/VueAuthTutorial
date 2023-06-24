@@ -6,7 +6,6 @@ import Services from './views/ServicesView.vue'
 import Donate from './views/DonateView.vue'
 import Support from './views/SupportView.vue'
 import Events from './views/EventsView.vue'
-import Sponsor from './views/SponsorView.vue'
 import Contact from './views/ContactView.vue'
 import Register from './views/RegisterView.vue'
 import Login from './views/LoginView.vue'
@@ -43,11 +42,6 @@ const routes = [
     path: '/events',
     name: 'Events',
     component: Events
-  },
-  {
-    path: '/sponsor',
-    name: 'Sponsor',
-    component: Sponsor
   },
   {
     path: '/contact',

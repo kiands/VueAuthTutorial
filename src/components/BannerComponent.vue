@@ -132,10 +132,9 @@ export default {
         'Home',
         'About Us',
         'Services',
-        'Donate',
-        'Support',
+        'Donate and Sponsor',
+        'Ways to Support',
         'Events',
-        'Become a Sponsor',
         'Contact Us',
         'More'
       ],
@@ -143,10 +142,9 @@ export default {
         'Home': '/',
         'About Us': '/about',
         'Services': '/services',
-        'Donate': '/donate',
-        'Support': '/support',
+        'Ways to Support': '/support',
         'Events': '/events',
-        'Become a Sponsor': '/sponsor',
+        'Donate and Sponsor': '/donate',
         'Contact Us': '/contact'
         // 'More': '/more'
       }

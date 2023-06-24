@@ -4,6 +4,7 @@
     <v-row>
       <v-col cols="12" sm="12" md="8">
         <!--v-card class="mx-auto" max-width="800"-->
+        <!--use object-fit: cover with 100% height to make horizontal overlapping possible-->
         <v-card style="height: 100%; object-fit: cover">
           <v-img src="@/assets/Home/img1.webp" style="height: 100%"></v-img>
         </v-card>
@@ -21,7 +22,7 @@
             <v-btn style="margin-bottom: 20px">
               JOIN US
             </v-btn>
-            <v-btn style="margin-bottom: 5px">
+            <v-btn style="margin-bottom: 5px" @click="navigateToAbout()">
               LEARN MORE
             </v-btn>
           </div>
@@ -137,6 +138,11 @@
     data() {
       return {
         buttonLink: 'https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton'
+      }
+    },
+    methods: {
+      navigateToAbout() {
+        this.$router.push('/about')
       }
     }
   }

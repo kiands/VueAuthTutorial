@@ -25,7 +25,7 @@
           <v-card-title>SHOP</v-card-title>
           <v-card-text>There are other ways to support our mission other than donating, you can go to our Foundation shop online and purchase an item. </v-card-text>
           <div style="margin: 16px; display: flex; justify-content: center">
-            <v-btn>SHOP AT THE THREE FS STORE</v-btn>
+            <v-btn :href="link1" target="_blank">SHOP AT THE THREE FS STORE</v-btn>
           </div>
         </v-card>
       </v-col>
@@ -39,6 +39,9 @@
           <div style="margin: 10px">Tell us a bit about yourself and where your car will be picked up. You’ll be contacted by a local towing agent within 2-3 business days to schedule a pick up time that works best for you.</div>
           <strong>Step 3:  Get Tax Receipt</strong>
           <div style="margin: 10px">Once you submit your car donation through the FFF Vehicle Donation Program, you’ll receive a confirmation email with access to your Donor Console. Within the Donor Console, you’ll be able to track the progress of your car donation, upload documents, and get tax and title information. After your car is sold, you will be emailed a tax receipt.</div>
+          <div style="margin: 16px; display: flex; justify-content: center">
+            <v-btn :href="link2" target="_blank">CAR DONATION PROGRAM</v-btn>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -56,7 +59,7 @@
           <div style="margin-left: 20px; margin-bottom: 20px">
             <div style="display: flex; flex-direction: column; justify-content: center;">
               <div>
-                <v-btn style="margin-bottom: 20px;" :href="buttonLink" target="_blank">Donate</v-btn>
+                <v-btn style="margin-bottom: 20px;" :href="link3" target="_blank">Donate</v-btn>
               </div>
               <v-img src="@/assets/Support/payments.png" max-width="200"></v-img>
             </div>
@@ -74,6 +77,13 @@
   export default {
     name: 'SupportView',
     // 这里是组件的JavaScript代码
+    data() {
+      return {
+        link1: "https://www.facefriendsfoundation.org",
+        link2: "https://www.cardonationwizard.com/cars-for-charity/donate/donate-a-car-for-charity.html?ref=cars-for-charity&affilID=Face%20Friends%20Foundation%2C%20Incorporated&affilName=Face%20Friends%20Foundation%2C%20Incorporated",
+        link3: "https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton"
+      }
+    }
   }
 </script>
 

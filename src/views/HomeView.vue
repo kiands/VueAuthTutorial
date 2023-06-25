@@ -19,8 +19,8 @@
             GIVING BACK TO OUR COMMUNITY THROUGH LIFE-CHANGING SERVICES.
           </v-card-text>
           <div style="padding-bottom: 50px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
-            <v-btn style="margin-bottom: 20px">
-              JOIN US
+            <v-btn style="margin-bottom: 20px" @click="navigateToDonate()">
+              ⚡️BOOST US⚡️
             </v-btn>
             <v-btn style="margin-bottom: 5px" @click="navigateToAbout()">
               LEARN MORE
@@ -41,7 +41,7 @@
           <v-card-text>
             Our amazing team of regular and part-time volunteers are committed to helping others. We take our convictions and turn them into action. Do you think you would be a good fit? Please get in touch for more information!
           </v-card-text>
-          <v-btn style="margin-bottom: 20px;"></v-btn>
+          <v-btn style="margin-bottom: 20px;" @click="navigateToEvents()">VOLUNTEER</v-btn>
         </v-card>
       </v-col>
       <v-col cols="12" xs="12" sm="6" md="4">
@@ -53,7 +53,7 @@
           <v-card-text>
             Our amazing team of regular and part-time volunteers are committed to helping others. We take our convictions and turn them into action. Do you think you would be a good fit? Please get in touch for more information!
           </v-card-text>
-          <v-btn style="margin-bottom: 20px;"></v-btn>
+          <v-btn style="margin-bottom: 20px;" @click="navigateToAbout()">ABOUT US</v-btn>
         </v-card>
       </v-col>
       <v-col cols="12" xs="12" sm="6" md="4">
@@ -65,7 +65,7 @@
           <v-card-text>
             Our amazing team of regular and part-time volunteers are committed to helping others. We take our convictions and turn them into action. Do you think you would be a good fit? Please get in touch for more information!
           </v-card-text>
-          <v-btn style="margin-bottom: 20px;"></v-btn>
+          <v-btn style="margin-bottom: 20px;" @click="navigateToSupport()">SUPPORT</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -143,7 +143,16 @@
     methods: {
       navigateToAbout() {
         this.$router.push('/about')
-      }
+      },
+      navigateToDonate() {
+        this.$router.push('/donate')
+      },
+      navigateToEvents() {
+        this.$router.push('/events')
+      },
+      navigateToSupport() {
+        this.$router.push('/support')
+      },
     }
   }
 </script>

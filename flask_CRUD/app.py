@@ -279,6 +279,7 @@ def contact():
 
 # This function is used to fetch and check current user's booked service
 @app.route('/api/booked_service', methods=['POST'])
+@jwt_required()
 def bookedService():
     data = request.get_json()
     user_id = data['user_id']
@@ -304,6 +305,7 @@ def bookedService():
 
 # This function has an atomic or consistency problem. Not serious if the current is small. Need ti be discussed.
 @app.route('/api/book_service', methods=['POST'])
+@jwt_required()
 def bookService():
     data = request.get_json()
     user_id = data['user_id']

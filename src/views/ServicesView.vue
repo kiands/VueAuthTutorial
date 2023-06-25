@@ -13,12 +13,15 @@
               <v-expansion-panel-header><strong>{{ service }}</strong></v-expansion-panel-header>
               <v-expansion-panel-content>
                 <v-row style="padding-left:20px; padding-right: 20px; display: flex; flex-direction: row; justify-content: space-around;">
-                  <v-col style="display: flex; flex-direction: column; align-items: center">
+                  <v-col style="display: flex; flex-direction: column; justify-content: space-around; align-items: center">
                     <div style="width: 100%; padding-top: 16px; margin-bottom: 20px; margin-right: 20px">
                       <!--Cannot use this.service_descriptions here-->
                       <v-card-text style="font-size: 20px;">{{ service_descriptions[service] }}</v-card-text>
                     </div>
-                    <v-btn>Refresh Dates</v-btn>
+                    <strong style="text-align: center;">
+                      Dear visitor: if you need help, please log in to have access to the available dates.
+                    </strong>
+                    <v-btn @click="showTimeSlots(service)">Show/Refresh Dates</v-btn>
                   </v-col>
                   <!--Mind the format to quote element in objects. `service` is a key here so do not quote with `''`-->
                   <v-col style="display: flex; justify-content: center">
@@ -52,9 +55,9 @@
                   <v-col>
                     <v-card
                       v-if="bookedService.service_name !== ''"
-                      style="padding-right: 16px; display: flex; flex-direction: row; justify-content: space-between; align-items: center"
+                      style="padding: 16px; display: flex; flex-direction: row; justify-content: space-between; align-items: center"
                     >
-                      <v-card-title>Current Booking At</v-card-title>
+                      <strong>Current Booking At</strong>
                       <div>{{ bookedService.date }}</div>
                       <div>{{ bookedService.time }}</div>
                       <v-btn>Revoke</v-btn>
@@ -151,7 +154,7 @@ export default {
     services: [],
     service_descriptions: {},
     currentChosenDate: '',
-    bookedService: '',
+    bookedService: { service_name: '' },
   }),
 
   created() {
@@ -189,13 +192,17 @@ export default {
         The payload of dispatch should use JS object notation. It can be read as json on backend.
       */
       this.currentChosenDate = ''; // Each time the user clicks another service, clear existed currentChosenDate.
-      this.$store.dispatch('service/fetchTimeSlots', { 'service_name': service }).then(() => {
-        this.timeSlots = this.$store.state.service.timeSlots
-      })
-      // Fetch booked service to help with blocking illegal access like multiple booking.
-      this.$store.dispatch('service/fetchBookedService', { 'user_id': this.$store.state.auth.user_id, 'service_name': service }).then(() => {
-        this.bookedService = this.$store.state.service.bookedService
-      })
+      if (this.$store.state.auth.isLoggedIn === true) {
+        this.$store.dispatch('service/fetchTimeSlots', { 'service_name': service }).then(() => {
+          this.timeSlots = this.$store.state.service.timeSlots
+        })
+        // Fetch booked service to help with blocking illegal access like multiple booking.
+        this.$store.dispatch('service/fetchBookedService', { 'user_id': this.$store.state.auth.user_id, 'service_name': service }).then(() => {
+          this.bookedService = this.$store.state.service.bookedService
+        })
+      } else {
+        console.log('only show basic information')
+      }
     },
 
     /*

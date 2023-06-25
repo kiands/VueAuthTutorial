@@ -48,6 +48,19 @@
                     </v-card>
                   </v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-card
+                      v-if="bookedService.service_name !== ''"
+                      style="padding-right: 16px; display: flex; flex-direction: row; justify-content: space-between; align-items: center"
+                    >
+                      <v-card-title>Current Booking At</v-card-title>
+                      <div>{{ bookedService.date }}</div>
+                      <div>{{ bookedService.time }}</div>
+                      <v-btn>Revoke</v-btn>
+                    </v-card>
+                  </v-col>
+                </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
             <!--<v-expansion-panel>
@@ -138,7 +151,7 @@ export default {
     services: [],
     service_descriptions: {},
     currentChosenDate: '',
-    bookedServices: { "title": "Food Support" },
+    bookedService: '',
   }),
 
   created() {
@@ -176,8 +189,12 @@ export default {
         The payload of dispatch should use JS object notation. It can be read as json on backend.
       */
       this.currentChosenDate = ''; // Each time the user clicks another service, clear existed currentChosenDate.
-      this.$store.dispatch('service/fetchTimeSlots', { 'service': service }).then(() => {
+      this.$store.dispatch('service/fetchTimeSlots', { 'service_name': service }).then(() => {
         this.timeSlots = this.$store.state.service.timeSlots
+      })
+      // Fetch booked service to help with blocking illegal access like multiple booking.
+      this.$store.dispatch('service/fetchBookedService', { 'user_id': this.$store.state.auth.user_id, 'service_name': service }).then(() => {
+        this.bookedService = this.$store.state.service.bookedService
       })
     },
 
@@ -191,23 +208,30 @@ export default {
       return Object.keys(this.timeSlots).includes(val)
     },
 
+    // When the dates on the calendar is clicked, this function will be triggered.
     updateDailySlots(date) {
       // This if-else is designed for clearing old service's dailySlots when the user clicks a new service.
       if (date === '') {
         this.dailySlots = []
       } else {
         this.dailySlots = Object.keys(this.timeSlots[date])
-        console.log(this.dailySlots)
+        // console.log(this.dailySlots)
       }
     },
 
     bookService(service, time) {
-      this.$store.dispatch('service/bookService', { 'user_id': this.$store.state.auth.user_id, 'service_name': service, 'date': this.currentChosenDate, 'time': time }).then(() => {
-        // Update time slots when a service is booked
-        this.timeSlots = this.$store.state.service.timeSlots
-        // Then update daily slots
-        this.updateDailySlots(this.currentChosenDate)
-      })
+      if (this.bookedService['service_name'] === '') {
+        this.$store.dispatch('service/bookService', { 'user_id': this.$store.state.auth.user_id, 'service_name': service, 'date': this.currentChosenDate, 'time': time }).then(() => {
+          // Update time slots when a service is booked
+          this.timeSlots = this.$store.state.service.timeSlots
+          // Then update daily slots
+          this.updateDailySlots(this.currentChosenDate)
+          // Finally, update newest booked service
+          this.bookedService = this.$store.state.service.bookedService
+        })
+      } else {
+        console.log('Sorry, you already have an existed booking')
+      }
     }
   },
 }

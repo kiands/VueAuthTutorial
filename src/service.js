@@ -17,7 +17,7 @@ const state = {
   service_descriptions: {},
   timeSlots: '',
   currentChosenDate: '',
-  bookedServices: []
+  bookedService: {}
 }
 
 const mutations = {
@@ -30,8 +30,8 @@ const mutations = {
     // An array
     state.timeSlots = datesInformation.timeSlots
   },
-  setBookedServices(state, service) {
-    state.bookedServices = service.bookedServices
+  setBookedService(state, service) {
+    state.bookedService = service.bookedService
   }
 }
 
@@ -62,12 +62,27 @@ const actions = {
       throw error
     }
   },
+  async fetchBookedService({ commit }, serviceInformation) {
+    try {
+      const response = await apiClient.post('booked_service', serviceInformation)
+      // If the value of the payload is a string, we need JSON.parse(). If it was a JSON in backend, there's no need.
+      const bookedService = response.data.bookedService
+      commit('setBookedService', { 'bookedService': bookedService })
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
   async bookService({ commit }, serviceInformation) {
     try {
       // Post and book, then whatever the result is, we need to update the time slots using the response data.
       const response = await apiClient.post('book_service', serviceInformation)
       const timeSlots = response.data.timeSlots
+      const bookedService = response.data.bookedService
+      // Set new time slots
       commit('setTimeSlots', { 'timeSlots': timeSlots })
+      // Set booked service
+      commit('setBookedService', { 'bookedService': bookedService })
     } catch (error) {
       console.log(error)
       throw error

@@ -243,14 +243,14 @@ def services():
 @jwt_required()
 def currentAllowedDates():
     data = request.get_json()
-    service = data['service']
+    service_name = data['service_name']
     sql_read = """
         SELECT time_slots FROM services
         WHERE service_name = %s
     """
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute(sql_read, (service,))
+    cursor.execute(sql_read, (service_name,))
     result = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -276,6 +276,31 @@ def contact():
     cursor.close()
     conn.close()
     return jsonify({"msg": "Received"}), 200
+
+# This function is used to fetch and check current user's booked service
+@app.route('/api/booked_service', methods=['POST'])
+def bookedService():
+    data = request.get_json()
+    user_id = data['user_id']
+    service_name = data['service_name']
+    sql_read = """
+        select * from booked_services
+        where user_id = %s and service_name = %s
+    """
+
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read, (user_id, service_name,))
+    result = cursor.fetchall()
+    if len(result) != 0:
+        cursor.close()
+        conn.close()
+        print(result[-1])
+        return jsonify({ "bookedService": { 'service_name': result[-1][2], 'date': result[-1][3], 'time': result[-1][4] } })
+    else:
+        cursor.close()
+        conn.close()
+        return jsonify({ "bookedService": { 'service_name': '' } })
 
 # This function has an atomic or consistency problem. Not serious if the current is small. Need ti be discussed.
 @app.route('/api/book_service', methods=['POST'])
@@ -317,12 +342,12 @@ def bookService():
         conn.commit()
         cursor.close()
         conn.close()
-        return jsonify({ "timeSlots": new_result })
+        return jsonify({ "timeSlots": new_result, "bookedService": { 'service_name': service_name, 'date': date, 'time': time } })
     else:
         # When the newest `timeSlots` is unavailable, return the newest query result directly to force an update.
         cursor.close()
         conn.close()
-        return jsonify({ "timeSlots": json.loads(result[0][0]) })
+        return jsonify({ "timeSlots": json.loads(result[0][0]), "bookedService": { 'service_name': '' } })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

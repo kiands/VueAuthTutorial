@@ -191,7 +191,8 @@ export default {
         The payload of dispatch should use JS object notation. It can be read as json on backend.
       */
       this.currentChosenDate = ''; // Each time the user clicks another service, clear existed currentChosenDate.
-      if (this.$store.state.auth.isLoggedIn === true) {
+      // Why this.$store.state.auth.isLoggedIn === true cannot take effect?
+      if (this.$store.state.auth.isLoggedIn) {
         this.$store.dispatch('service/fetchTimeSlots', { 'service_name': service }).then(() => {
           this.timeSlots = this.$store.state.service.timeSlots
         })

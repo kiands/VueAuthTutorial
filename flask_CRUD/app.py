@@ -12,7 +12,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符串
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)  # 设置访问令牌有效期为15分钟
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)  # 设置访问令牌有效期为15分钟
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)  # 设置刷新令牌有效期为7天
 jwt = JWTManager(app)
 CORS(app, resources={r"/api/*": {"origins": "*"}})

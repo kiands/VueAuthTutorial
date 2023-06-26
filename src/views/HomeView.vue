@@ -1,9 +1,9 @@
 <template>
   <v-container style="margin-top: 12px; margin-bottom: 12px">
-    <!--Head-->
-    <v-row>
+    <!--Head (Carousel) when screen is md and up-->
+    <v-row v-show="$vuetify.breakpoint.mdAndUp">
       <v-col cols="12" sm="12" md="8">
-        <v-card style="height: 100%">
+        <v-card>
           <!--use object-fit: cover with 100% height to make horizontal overlapping possible-->
           <!--v-card style="height: 100%; object-fit: cover">
             <v-img src="@/assets/Home/img1.webp" style="height: 100%"></v-img>
@@ -16,14 +16,55 @@
             <v-carousel-item
               v-for="(item,i) in items"
               :key="i"
-              :src="require(`@/assets/Home/Carousel/${item.src}`)"
               @click="navigateToLink(item.link)"
             >
+              <v-img :src="require(`@/assets/Home/Carousel/${item.src}`)"></v-img>
             </v-carousel-item>
           </v-carousel>
         </v-card>
       </v-col>
       <v-col cols="12" sm="12" md="4">
+        <!--v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;"-->
+        <v-card style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
+          <v-card-text class="text-h5 text-center" style="padding-top: 45px; padding-bottom: 20px;">
+            WELCOME
+          </v-card-text>
+          <v-card-text class="text-h4 text-center font-weight-bold" style="padding-top: -20px; padding-left: 30px; padding-right: 30px; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center;">
+            GIVING BACK TO OUR COMMUNITY THROUGH LIFE-CHANGING SERVICES.
+          </v-card-text>
+          <div style="padding-bottom: 50px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+            <v-btn style="margin-bottom: 20px" @click="navigateToDonate()">
+              ⚡️BOOST US⚡️
+            </v-btn>
+            <v-btn style="margin-bottom: 5px" @click="navigateToAbout()">
+              LEARN MORE
+            </v-btn>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+    <!--Head (Carousel) when screen is sm and down-->
+    <v-row v-show="$vuetify.breakpoint.smAndDown">
+      <v-col cols="12" xs="12" sm="12">
+        <v-card>
+          <v-carousel
+            style="height: 300px; width: 100%"
+            cycle
+            hide-delimiter-background
+            show-arrows-on-hover
+          >
+            <v-carousel-item
+              style="width: 100%"
+              v-for="(item,i) in items"
+              :key="i"
+              @click="navigateToLink(item.link)"
+            >
+              <v-img :src="require(`@/assets/Home/Carousel/${item.src}`)"></v-img>
+            </v-carousel-item>
+          </v-carousel>
+        </v-card>
+      </v-col>
+      <v-col cols="12" xs="12" sm="12">
         <!--v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;"-->
         <v-card style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
           <v-card-text class="text-h5 text-center" style="padding-top: 45px; padding-bottom: 20px;">
@@ -158,7 +199,7 @@
             link: '/about'
           },
           {
-            src: 'img2.webp',
+            src: 'img2.jpg',
             link: '/events'
           }
         ],

@@ -17,7 +17,7 @@
               v-for="(item,i) in items"
               :key="i"
               :src="require(`@/assets/Home/Carousel/${item.src}`)"
-              @click="navigateToAbout()"
+              @click="navigateToLink(item.link)"
             >
             </v-carousel-item>
           </v-carousel>

@@ -3,15 +3,29 @@
     <!--Head-->
     <v-row>
       <v-col cols="12" sm="12" md="8">
-        <!--v-card class="mx-auto" max-width="800"-->
-        <!--use object-fit: cover with 100% height to make horizontal overlapping possible-->
-        <v-card style="height: 100%; object-fit: cover">
-          <v-img src="@/assets/Home/img1.webp" style="height: 100%"></v-img>
+        <v-card style="height: 100%">
+          <!--use object-fit: cover with 100% height to make horizontal overlapping possible-->
+          <!--v-card style="height: 100%; object-fit: cover">
+            <v-img src="@/assets/Home/img1.webp" style="height: 100%"></v-img>
+          </v-card-->
+          <v-carousel
+            cycle
+            hide-delimiter-background
+            show-arrows-on-hover
+          >
+            <v-carousel-item
+              v-for="(item,i) in items"
+              :key="i"
+              :src="require(`@/assets/Home/Carousel/${item.src}`)"
+              @click="navigateToAbout()"
+            >
+            </v-carousel-item>
+          </v-carousel>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="12" md="4" style="height: auto">
+      <v-col cols="12" sm="12" md="4">
         <!--v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;"-->
-        <v-card style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
+        <v-card style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
           <v-card-text class="text-h5 text-center" style="padding-top: 45px; padding-bottom: 20px;">
             WELCOME
           </v-card-text>
@@ -137,7 +151,17 @@
     // 这里是组件的JavaScript代码
     data() {
       return {
-        buttonLink: 'https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton'
+        buttonLink: 'https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton',
+        items: [
+          {
+            src: 'img1.webp',
+            link: '/about'
+          },
+          {
+            src: 'img2.webp',
+            link: '/events'
+          }
+        ],
       }
     },
     methods: {
@@ -153,6 +177,9 @@
       navigateToSupport() {
         this.$router.push('/support')
       },
+      navigateToLink(link) {
+        this.$router.push(link)
+      }
     }
   }
 </script>

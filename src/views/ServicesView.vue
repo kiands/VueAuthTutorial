@@ -58,9 +58,8 @@
                       style="padding: 16px; display: flex; flex-direction: row; justify-content: space-between; align-items: center"
                     >
                       <strong>Current Booking At</strong>
-                      <div>{{ bookedService.date }}</div>
-                      <div>{{ bookedService.time }}</div>
-                      <v-btn>Revoke</v-btn>
+                      <div>{{ bookedService.date }} {{ bookedService.time }}</div>
+                      <v-btn @click="revokeBooking(bookedService)">Revoke</v-btn>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -154,7 +153,7 @@ export default {
     services: [],
     service_descriptions: {},
     currentChosenDate: '',
-    bookedService: { service_name: '' },
+    bookedService: { 'service_name': '' },
   }),
 
   created() {
@@ -239,6 +238,17 @@ export default {
       } else {
         console.log('Sorry, you already have an existed booking')
       }
+    },
+
+    revokeBooking(bookedService) {
+      this.$store.dispatch('service/revokeBooking', { 'user_id': this.$store.state.auth.user_id, 'service_name': bookedService.service_name, 'date': bookedService.date, 'time': bookedService.time }).then(() => {
+        // Update time slots when a service is booked
+        this.timeSlots = this.$store.state.service.timeSlots
+        // Then update daily slots
+        this.updateDailySlots(this.currentChosenDate)
+        // Finally, update newest booked service
+        this.bookedService = this.$store.state.service.bookedService
+      })
     }
   },
 }

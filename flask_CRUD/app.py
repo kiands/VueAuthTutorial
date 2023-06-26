@@ -12,7 +12,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符串
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)  # 设置访问令牌有效期为15分钟
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)  # 设置访问令牌有效期为15分钟
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)  # 设置刷新令牌有效期为7天
 jwt = JWTManager(app)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -277,7 +277,7 @@ def contact():
     conn.close()
     return jsonify({"msg": "Received"}), 200
 
-# This function is used to fetch and check current user's booked service
+# This function is used to fetch and check current user's booked service, also called pending/approved service
 @app.route('/api/booked_service', methods=['POST'])
 @jwt_required()
 def bookedService():
@@ -286,18 +286,20 @@ def bookedService():
     service_name = data['service_name']
     sql_read = """
         select * from booked_services
-        where user_id = %s and service_name = %s
+        where user_id = %s and (status = %s or status = %s) and service_name = %s
     """
 
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute(sql_read, (user_id, service_name,))
+    cursor.execute(sql_read, (user_id, 0, 1, service_name,))
     result = cursor.fetchall()
+    # Not null.
     if len(result) != 0:
         cursor.close()
         conn.close()
         print(result[-1])
         return jsonify({ "bookedService": { 'service_name': result[-1][2], 'date': result[-1][3], 'time': result[-1][4] } })
+    # Null.
     else:
         cursor.close()
         conn.close()
@@ -350,6 +352,49 @@ def bookService():
         cursor.close()
         conn.close()
         return jsonify({ "timeSlots": json.loads(result[0][0]), "bookedService": { 'service_name': '' } })
+
+# This function has an atomic or consistency problem. Not serious if the current is small. Need ti be discussed.
+@app.route('/api/revoke_booking', methods=['POST'])
+@jwt_required()
+def revokeBooking():
+    data = request.get_json()
+    user_id = data['user_id']
+    service_name = data['service_name']
+    date = data['date']
+    time = data['time']
+    sql_read = """
+        select time_slots from services
+        where service_name = %s
+    """
+    json_path = '$."{}"."{}"'.format(date, time)
+    sql_update_services = """
+        UPDATE services
+        SET time_slots = JSON_SET(time_slots, %s, %s)
+        WHERE service_name = %s
+    """
+    sql_update_booking = """
+        UPDATE booked_services
+        SET status = -1
+        WHERE service_name = %s and (status = %s or status = %s)
+    """
+
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read, (service_name,))
+    result = cursor.fetchall()
+    remaining = json.loads(result[0][0])[date][time]
+    # Update the database and return modified `timeSlots` directly because they just look the same.
+    cursor.execute(sql_update_services, (json_path, remaining + 1, service_name))
+    conn.commit()
+    new_result = json.loads(result[0][0])
+    # This mutation is inplace
+    new_result[date][time] = remaining + 1
+    # Then update the booking record
+    cursor.execute(sql_update_booking, (service_name, 0, 1,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({ "timeSlots": new_result, "bookedService": { 'service_name': '' } })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

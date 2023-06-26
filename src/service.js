@@ -17,7 +17,7 @@ const state = {
   service_descriptions: {},
   timeSlots: '',
   currentChosenDate: '',
-  bookedService: {}
+  bookedService: { 'service_name': '' }
 }
 
 const mutations = {
@@ -83,6 +83,20 @@ const actions = {
       commit('setTimeSlots', { 'timeSlots': timeSlots })
       // Set booked service
       commit('setBookedService', { 'bookedService': bookedService })
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
+  },
+  async revokeBooking({commit}, serviceInformation) {
+    try {
+      // Post and revoke, then whatever the result is, we need to update the time slots using the response data.
+      const response = await apiClient.post('revoke_booking', serviceInformation)
+      const timeSlots = response.data.timeSlots
+      // Set updated time slots
+      commit('setTimeSlots', { 'timeSlots': timeSlots })
+      // Set booked service as 'empty'
+      commit('setBookedService', { 'bookedService': { 'service_name': '' } })
     } catch (error) {
       console.log(error)
       throw error

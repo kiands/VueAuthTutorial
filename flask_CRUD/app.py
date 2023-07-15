@@ -6,6 +6,7 @@ from datetime import timedelta
 from auth import auth_blueprint, revoked_tokens
 from services import services_blueprint
 from check_contacts import check_contacts_blueprint
+from check_services import check_services_blueprint
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符串
@@ -15,6 +16,7 @@ app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)  # 设置刷新令�
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(services_blueprint)
 app.register_blueprint(check_contacts_blueprint)
+app.register_blueprint(check_services_blueprint)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # 创建 JWTManager 对象（这个只能在app层级上实例化，无法在Blueprint层级上进行，所以只能在app.py中操作）

@@ -21,20 +21,16 @@ config = {
     "database": "FaceFriendsFoundation"  # 数据库名称
 }
 
-check_services_blueprint = Blueprint('check_services', __name__)
+manage_contacts_blueprint = Blueprint('manage_contacts', __name__)
 
 # 测试服务项目API的路由
-@check_services_blueprint.route('/api/cms/services', methods=['GET'])
+@manage_contacts_blueprint.route('/api/cms/contacts', methods=['GET'])
 def contacts():
     sql_detect = """
-        select count(booking_id) from booked_services
+        select count(contact_id) from contacts
     """
     sql_read = """
-        select booked_services.*, users.email
-        from booked_services
-        join users on booked_services.user_id = users.user_id
-        where booked_services.status != 0
-        order by booking_id limit 10
+        select * from contacts order by contact_id limit 10
     """
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
@@ -44,19 +40,17 @@ def contacts():
     result = cursor.fetchall()
     cursor.close()
     conn.close()
-    services = []
+    contacts = []
     for i in range(0, len(result)):
-        services.append({
-            'booking_id' : result[i][0],
-            'user_id' : result[i][1],
-            'service_name' : result[i][2],
-            'date' : result[i][3],
-            'time' : result[i][4],
-            'status' : result[i][5],
-            'message': result[i][6],
-            'user_email' : result[i][7]
+        contacts.append({
+            'contact_id' : result[i][0],
+            'name' : result[i][1],
+            'email' : result[i][2],
+            'source' : result[i][3],
+            'reason' : result[i][4],
+            'additional_information' : result[i][5]
         })
     return jsonify({
         'count': count[0][0],
-        'services': services
+        'contacts': contacts
     })

@@ -19,7 +19,8 @@ app.register_blueprint(services_blueprint)
 app.register_blueprint(manage_home_blueprint)
 app.register_blueprint(manage_contacts_blueprint)
 app.register_blueprint(manage_services_blueprint)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+# CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "PUT"], "allow_headers": "*"}})
 
 # 创建 JWTManager 对象（这个只能在app层级上实例化，无法在Blueprint层级上进行，所以只能在app.py中操作）
 jwt = JWTManager(app)

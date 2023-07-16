@@ -47,3 +47,22 @@ def carousels():
     return jsonify({
         'carousels': carousels
     })
+
+# 更新轮播图
+@manage_home_blueprint.route('/api/cms/carousels/<int:carousel_id>', methods=['PUT'])
+def update_carousel(carousel_id):
+    sql_update = """
+        update carousels
+        set source = %s, link = %s
+        where carousel_id = %s
+    """
+    data = request.get_json()
+    src = data.get('src')
+    link = data.get('link')
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_update, (src, link, carousel_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'message': 'Carousel updated successfully!'})

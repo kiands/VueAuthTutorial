@@ -5,6 +5,7 @@ from datetime import timedelta
 # 导入路由文件并在后面注册蓝图或是需要用到的变量，如auth中的revoked_tokens（装载已撤销JWT的list）
 from auth import auth_blueprint, revoked_tokens
 from services import services_blueprint
+from manage_home import manage_home_blueprint
 from manage_contacts import manage_contacts_blueprint
 from manage_services import manage_services_blueprint
 
@@ -15,6 +16,7 @@ app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)  # 设置刷新令�
 # 注册不同功能模块的蓝图
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(services_blueprint)
+app.register_blueprint(manage_home_blueprint)
 app.register_blueprint(manage_contacts_blueprint)
 app.register_blueprint(manage_services_blueprint)
 CORS(app, resources={r"/api/*": {"origins": "*"}})

@@ -2,41 +2,40 @@
   <v-container style="margin-top: 12px; margin-bottom: 12px">
     <!--Head (Carousel) when screen is md and up-->
     <v-row v-show="$vuetify.breakpoint.mdAndUp">
-      <v-col cols="12" sm="12" md="8">
-        <v-card>
+      <v-col cols="12" sm="12" md="8" style="display: flex; flex-grow: 1">
+        <v-card style="width: 100%; object-fit: cover">
           <!--use object-fit: cover with 100% height to make horizontal overlapping possible-->
           <!--v-card style="height: 100%; object-fit: cover">
             <v-img src="@/assets/Home/img1.webp" style="height: 100%"></v-img>
           </v-card-->
           <v-carousel
             cycle
-            hide-delimiter-background
-            show-arrows-on-hover
+            hide-delimiters
           >
             <v-carousel-item
               v-for="(item,i) in items"
               :key="i"
               @click="navigateToLink(item.link)"
+              :src="item.src"
             >
-              <v-img :src="require(`@/assets/Home/Carousel/${item.src}`)"></v-img>
             </v-carousel-item>
           </v-carousel>
         </v-card>
       </v-col>
       <v-col cols="12" sm="12" md="4">
         <!--v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;"-->
-        <v-card style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
-          <v-card-text class="text-h5 text-center" style="padding-top: 45px; padding-bottom: 20px;">
-            WELCOME
+        <v-card style="height: 100%; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center;">
+          <v-card-text class="text-h5 text-center" style="padding-top: 25px;">
+            WELCOME!
           </v-card-text>
-          <v-card-text class="text-h4 text-center font-weight-bold" style="padding-top: -20px; padding-left: 30px; padding-right: 30px; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center;">
+          <v-card-text class="text-h4 text-center font-weight-bold" style="padding-top: -20px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px; display: flex; flex-direction: column; align-items: center;">
             GIVING BACK TO OUR COMMUNITY THROUGH LIFE-CHANGING SERVICES.
           </v-card-text>
-          <div style="padding-bottom: 50px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
-            <v-btn style="margin-bottom: 20px" @click="navigateToDonate()">
-              ⚡️BOOST US⚡️
+          <div style="padding-bottom: 35px; padding-left: 0; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <v-btn style="margin-right:15px" @click="navigateToDonate()">
+              DONATE
             </v-btn>
-            <v-btn style="margin-bottom: 5px" @click="navigateToAbout()">
+            <v-btn @click="navigateToAbout()">
               LEARN MORE
             </v-btn>
           </div>
@@ -45,21 +44,19 @@
     </v-row>
     <!--Head (Carousel) when screen is sm and down-->
     <v-row v-show="$vuetify.breakpoint.smAndDown">
-      <v-col cols="12" xs="12" sm="12">
+      <v-col cols="12" xs="12" sm="12" style="display: flex;">
         <v-card>
           <v-carousel
-            style="height: 300px; width: 100%"
             cycle
             hide-delimiter-background
             show-arrows-on-hover
           >
             <v-carousel-item
-              style="width: 100%"
               v-for="(item,i) in items"
               :key="i"
               @click="navigateToLink(item.link)"
+              :src="item.src"
             >
-              <v-img :src="require(`@/assets/Home/Carousel/${item.src}`)"></v-img>
             </v-carousel-item>
           </v-carousel>
         </v-card>
@@ -68,16 +65,16 @@
         <!--v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;"-->
         <v-card style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
           <v-card-text class="text-h5 text-center" style="padding-top: 45px; padding-bottom: 20px;">
-            WELCOME
+            WELCOME!
           </v-card-text>
-          <v-card-text class="text-h4 text-center font-weight-bold" style="padding-top: -20px; padding-left: 30px; padding-right: 30px; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center;">
+          <v-card-text class="text-h4 text-center font-weight-bold" style="padding-top: -20px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px; display: flex; flex-direction: column; align-items: center;">
             GIVING BACK TO OUR COMMUNITY THROUGH LIFE-CHANGING SERVICES.
           </v-card-text>
-          <div style="padding-bottom: 50px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
-            <v-btn style="margin-bottom: 20px" @click="navigateToDonate()">
-              ⚡️BOOST US⚡️
+          <div style="padding-bottom: 35px; padding-left: 0; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <v-btn style="margin-right:15px" @click="navigateToDonate()">
+              DONATE
             </v-btn>
-            <v-btn style="margin-bottom: 5px" @click="navigateToAbout()">
+            <v-btn @click="navigateToAbout()">
               LEARN MORE
             </v-btn>
           </div>
@@ -195,11 +192,11 @@
         buttonLink: 'https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton',
         items: [
           {
-            src: 'img1.webp',
+            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
             link: '/about'
           },
           {
-            src: 'img2.jpg',
+            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
             link: '/events'
           }
         ],

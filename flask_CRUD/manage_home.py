@@ -66,3 +66,35 @@ def update_carousel(carousel_id):
     cursor.close()
     conn.close()
     return jsonify({'message': 'Carousel updated successfully!'})
+
+# 新增轮播图
+@manage_home_blueprint.route('/api/cms/carousels', methods=['POST'])
+def create_carousel():
+    sql_create = """
+        insert into carousels (source, link)
+        values (%s, %s)
+    """
+    data = request.get_json()
+    src = data.get('src')
+    link = data.get('link')
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_create, (src, link,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'message': 'Carousel created successfully!'})
+
+# 删除轮播图
+@manage_home_blueprint.route('/api/cms/carousels/<int:carousel_id>', methods=['DELETE'])
+def delete_carousel(carousel_id):
+    sql_delete = """
+        DELETE FROM carousels WHERE carousel_id = %s
+    """
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_delete, (carousel_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'message': 'Carousel deleted successfully!'})

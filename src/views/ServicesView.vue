@@ -242,6 +242,7 @@ export default {
     },
 
     cancelBooking(bookedService) {
+      console.log(bookedService)
       this.$store.dispatch('service/cancelBooking', { 'booking_id': bookedService.booking_id, 'service_name': bookedService.service_name, 'date': bookedService.date, 'time': bookedService.time }).then(() => {
         // Update time slots when a service is booked
         this.timeSlots = this.$store.state.service.timeSlots

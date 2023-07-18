@@ -153,7 +153,7 @@ def bookService():
         conn.commit()
         cursor.close()
         conn.close()
-        return jsonify({ "timeSlots": new_result, "bookedService": { 'service_name': service_name, 'date': date, 'time': time } })
+        return jsonify({ "timeSlots": new_result })
     else:
         # When the newest `timeSlots` is unavailable, return the newest query result directly to force an update.
         cursor.close()

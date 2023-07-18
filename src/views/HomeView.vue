@@ -13,10 +13,10 @@
             hide-delimiters
           >
             <v-carousel-item
-              v-for="(item,i) in items"
+              v-for="(item,i) in carousels"
               :key="i"
               @click="navigateToLink(item.link)"
-              :src="item.src"
+              :src="item.source"
             >
             </v-carousel-item>
           </v-carousel>
@@ -55,7 +55,7 @@
               v-for="(item,i) in carousels"
               :key="i"
               @click="navigateToLink(item.link)"
-              :src=item.src
+              :src=item.source
             >
             </v-carousel-item>
           </v-carousel>

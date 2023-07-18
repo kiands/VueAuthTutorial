@@ -186,9 +186,12 @@
 <script>
   export default {
     name: 'HomeView',
-    // 这里是组件的JavaScript代码
+    mounted() {
+      this.initialize();
+    },
     data() {
       return {
+        carousels: [],
         buttonLink: 'https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton',
         items: [
           {
@@ -203,6 +206,11 @@
       }
     },
     methods: {
+      initialize() {
+        apiClient.get("cms/carousels").then(response => {
+          this.carousels = response.data.carousels
+        })
+      },
       navigateToAbout() {
         this.$router.push('/about')
       },

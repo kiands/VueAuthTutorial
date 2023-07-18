@@ -52,7 +52,7 @@
             show-arrows-on-hover
           >
             <v-carousel-item
-              v-for="(item,i) in items"
+              v-for="(item,i) in carousels"
               :key="i"
               @click="navigateToLink(item.link)"
               :src="item.src"
@@ -187,22 +187,12 @@
   export default {
     name: 'HomeView',
     mounted() {
-      this.initialize();
+      this.initialize()
     },
     data() {
       return {
         carousels: [],
         buttonLink: 'https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton',
-        items: [
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-            link: '/about'
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-            link: '/events'
-          }
-        ],
       }
     },
     methods: {

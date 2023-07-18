@@ -55,7 +55,7 @@
               v-for="(item,i) in carousels"
               :key="i"
               @click="navigateToLink(item.link)"
-              :src="item.src"
+              :src=item.src
             >
             </v-carousel-item>
           </v-carousel>

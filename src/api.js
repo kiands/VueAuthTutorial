@@ -18,7 +18,7 @@ const refreshClient = axios.create({
 })
 
 // 豁免JWT token的URL列表
-const exemptedApiList = ['register', 'login', 'services', 'contact']
+const exemptedApiList = ['register', 'login', 'services', 'contact', 'contacts', 'carousels', 'cms']
 
 const isTokenExpired = (token) => {
   const decoded = jwtDecode(token)
@@ -29,12 +29,13 @@ const isTokenExpired = (token) => {
 // 请求拦截器
 apiClient.interceptors.request.use(async (config) => {
   const url = config.url.split('/').pop()
+  const cmsFeature = config.url.split('/')[0]
   const accessToken = localStorage.getItem('token')
   const refreshToken = localStorage.getItem('refresh_token')
 
   // 豁免token的URL，不改动直接放行
   // if (exemptedApiList.includes(url) || !accessToken) {
-  if (exemptedApiList.includes(url)) {
+  if (exemptedApiList.includes(url) || exemptedApiList.includes(cmsFeature)) {
     return config
   }
 

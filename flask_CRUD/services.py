@@ -105,7 +105,7 @@ def bookedService():
         cursor.close()
         conn.close()
         print(result[-1])
-        return jsonify({ "bookedService": { 'service_name': result[-1][2], 'date': result[-1][3], 'time': result[-1][4] } })
+        return jsonify({ "bookedService": { 'booking_id': result[-1][0], 'service_name': result[-1][2], 'date': result[-1][3], 'time': result[-1][4] } })
     # Null.
     else:
         cursor.close()
@@ -161,11 +161,11 @@ def bookService():
         return jsonify({ "timeSlots": json.loads(result[0][0]), "bookedService": { 'service_name': '' } })
 
 # This function has an atomic or consistency problem. Not serious if the current is small. Need ti be discussed.
-@services_blueprint.route('/api/revoke_booking', methods=['POST'])
+@services_blueprint.route('/api/cancel_booking', methods=['POST'])
 @jwt_required()
-def revokeBooking():
+def cancelBooking():
     data = request.get_json()
-    user_id = data['user_id']
+    booking_id = data['booking_id']
     service_name = data['service_name']
     date = data['date']
     time = data['time']
@@ -182,7 +182,7 @@ def revokeBooking():
     sql_update_booking = """
         UPDATE booked_services
         SET status = -1
-        WHERE service_name = %s and (status = %s or status = %s)
+        WHERE booking_id = %s
     """
 
     conn = mysql.connector.connect(**config)
@@ -197,7 +197,7 @@ def revokeBooking():
     # This mutation is inplace
     new_result[date][time] = remaining + 1
     # Then update the booking record
-    cursor.execute(sql_update_booking, (service_name, 0, 1,))
+    cursor.execute(sql_update_booking, (booking_id,))
     conn.commit()
     cursor.close()
     conn.close()

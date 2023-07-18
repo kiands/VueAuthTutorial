@@ -23,9 +23,9 @@ config = {
 
 manage_services_blueprint = Blueprint('manage_services', __name__)
 
-# 测试服务项目API的路由
+# 查看当前服务预订列表
 @manage_services_blueprint.route('/api/cms/services', methods=['GET'])
-def contacts():
+def check_services():
     sql_detect = """
         select count(booking_id) from booked_services
     """
@@ -60,3 +60,45 @@ def contacts():
         'count': count[0][0],
         'services': services
     })
+
+# 撤销服务预订
+@manage_services_blueprint.route('/api/cms/revoke_booking', methods=['POST'])
+def revoke_booking():
+    data = request.get_json()
+    user_id = data['user_id']
+    service_name = data['service_name']
+    date = data['date']
+    time = data['time']
+    sql_read = """
+        select time_slots from services
+        where service_name = %s
+    """
+    json_path = '$."{}"."{}"'.format(date, time)
+    sql_update_services = """
+        UPDATE services
+        SET time_slots = JSON_SET(time_slots, %s, %s)
+        WHERE service_name = %s
+    """
+    sql_update_booking = """
+        UPDATE booked_services
+        SET status = -1
+        WHERE service_name = %s and (status = %s or status = %s)
+    """
+
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read, (service_name,))
+    result = cursor.fetchall()
+    remaining = json.loads(result[0][0])[date][time]
+    # Update the database and return modified `timeSlots` directly because they just look the same.
+    cursor.execute(sql_update_services, (json_path, remaining + 1, service_name))
+    conn.commit()
+    new_result = json.loads(result[0][0])
+    # This mutation is inplace
+    new_result[date][time] = remaining + 1
+    # Then update the booking record
+    cursor.execute(sql_update_booking, (service_name, 0, 1,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({ "timeSlots": new_result, "bookedService": { 'service_name': '' } })

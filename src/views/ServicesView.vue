@@ -59,7 +59,7 @@
                     >
                       <strong>Current Booking At</strong>
                       <div>{{ bookedService.date }} {{ bookedService.time }}</div>
-                      <v-btn @click="revokeBooking(bookedService)">Revoke</v-btn>
+                      <v-btn @click="cancelBooking(bookedService)">CANCEL</v-btn>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -241,8 +241,8 @@ export default {
       }
     },
 
-    revokeBooking(bookedService) {
-      this.$store.dispatch('service/revokeBooking', { 'user_id': this.$store.state.auth.user_id, 'service_name': bookedService.service_name, 'date': bookedService.date, 'time': bookedService.time }).then(() => {
+    cancelBooking(bookedService) {
+      this.$store.dispatch('service/cancelBooking', { 'booking_id': bookedService.booking_id, 'service_name': bookedService.service_name, 'date': bookedService.date, 'time': bookedService.time }).then(() => {
         // Update time slots when a service is booked
         this.timeSlots = this.$store.state.service.timeSlots
         // Then update daily slots

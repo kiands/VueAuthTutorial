@@ -88,10 +88,10 @@ const actions = {
       throw error
     }
   },
-  async revokeBooking({commit}, serviceInformation) {
+  async cancelBooking({commit}, serviceInformation) {
     try {
       // Post and revoke, then whatever the result is, we need to update the time slots using the response data.
-      const response = await apiClient.post('revoke_booking', serviceInformation)
+      const response = await apiClient.post('cancel_booking', serviceInformation)
       const timeSlots = response.data.timeSlots
       // Set updated time slots
       commit('setTimeSlots', { 'timeSlots': timeSlots })

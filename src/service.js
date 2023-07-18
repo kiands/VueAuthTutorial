@@ -77,9 +77,9 @@ const actions = {
     try {
       // Post and book, then whatever the result is, we need to update the time slots using the response data.
       const response1 = await apiClient.post('book_service', serviceInformation)
-      const response2 = await apiClient.get('booked_service', serviceInformation)
+      const response2 = await apiClient.post('booked_service', serviceInformation)
       const timeSlots = response1.data.timeSlots
-      const bookedService = response.data.bookedService
+      const bookedService = response2.data.bookedService
       // Set new time slots
       commit('setTimeSlots', { 'timeSlots': timeSlots })
       // Set booked service

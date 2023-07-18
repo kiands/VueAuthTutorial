@@ -184,6 +184,7 @@
 </template>
     
 <script>
+  import apiClient from "@/api.js"
   export default {
     name: 'HomeView',
     mounted() {

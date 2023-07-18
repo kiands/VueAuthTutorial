@@ -27,13 +27,13 @@ manage_services_blueprint = Blueprint('manage_services', __name__)
 @manage_services_blueprint.route('/api/cms/services', methods=['GET'])
 def check_services():
     sql_detect = """
-        select count(booking_id) from booked_services
+        select count(booking_id) from booked_services where status != -1
     """
     sql_read = """
         select booked_services.*, users.email
         from booked_services
         join users on booked_services.user_id = users.user_id
-        where booked_services.status != 0
+        where booked_services.status != -1
         order by booking_id limit 10
     """
     conn = mysql.connector.connect(**config)
@@ -65,7 +65,7 @@ def check_services():
 @manage_services_blueprint.route('/api/cms/revoke_booking', methods=['POST'])
 def revoke_booking():
     data = request.get_json()
-    user_id = data['user_id']
+    booking_id = data['booking_id']
     service_name = data['service_name']
     date = data['date']
     time = data['time']
@@ -82,7 +82,7 @@ def revoke_booking():
     sql_update_booking = """
         UPDATE booked_services
         SET status = -1
-        WHERE service_name = %s and (status = %s or status = %s)
+        WHERE booking_id = %s
     """
 
     conn = mysql.connector.connect(**config)
@@ -97,8 +97,8 @@ def revoke_booking():
     # This mutation is inplace
     new_result[date][time] = remaining + 1
     # Then update the booking record
-    cursor.execute(sql_update_booking, (service_name, 0, 1,))
+    cursor.execute(sql_update_booking, (booking_id,))
     conn.commit()
     cursor.close()
     conn.close()
-    return jsonify({ "timeSlots": new_result, "bookedService": { 'service_name': '' } })
+    return jsonify("Revoked successfully!")

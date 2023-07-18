@@ -153,6 +153,8 @@ def bookService():
         conn.commit()
         cursor.close()
         conn.close()
+        # Return new time slots here and the newest booked service can be handled by requesting route: booked_service.
+        # Maybe it is not a good idea to compute new time slot (new_result) inplacely. We should use a route to request the new time slot when booking is busy.
         return jsonify({ "timeSlots": new_result })
     else:
         # When the newest `timeSlots` is unavailable, return the newest query result directly to force an update.

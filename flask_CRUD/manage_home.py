@@ -27,7 +27,8 @@ manage_home_blueprint = Blueprint('manage_home', __name__)
 @manage_home_blueprint.route('/api/cms/carousels', methods=['GET'])
 def carousels():
     sql_read = """
-        select * from carousels
+        select * from homepage_images
+        where type = 'carousel'
     """
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
@@ -38,11 +39,12 @@ def carousels():
     carousels = []
     for i in range(0, len(result)):
         carousels.append({
-            'carousel_id' : result[i][0],
-            'source' : result[i][1],
-            'link' : result[i][2],
-            'name' : result[i][3],
-            'description' : result[i][4]
+            'image_id' : result[i][0],
+            'type': result[i][1],
+            'source' : result[i][2],
+            'link' : result[i][3],
+            'name' : result[i][4],
+            'description' : result[i][5]
         })
     return jsonify({
         'carousels': carousels
@@ -52,9 +54,9 @@ def carousels():
 @manage_home_blueprint.route('/api/cms/carousels/<int:carousel_id>', methods=['PUT'])
 def update_carousel(carousel_id):
     sql_update = """
-        update carousels
+        update homepage_images
         set source = %s, link = %s
-        where carousel_id = %s
+        where image_id = %s
     """
     data = request.get_json()
     src = data.get('src')
@@ -71,15 +73,16 @@ def update_carousel(carousel_id):
 @manage_home_blueprint.route('/api/cms/carousels', methods=['POST'])
 def create_carousel():
     sql_create = """
-        insert into carousels (source, link)
-        values (%s, %s)
+        insert into homepage_images (type, source, link)
+        values (%s, %s, %s)
     """
     data = request.get_json()
+    type = 'carousel'
     src = data.get('src')
     link = data.get('link')
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
-    cursor.execute(sql_create, (src, link,))
+    cursor.execute(sql_create, (type, src, link,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -89,7 +92,7 @@ def create_carousel():
 @manage_home_blueprint.route('/api/cms/carousels/<int:carousel_id>', methods=['DELETE'])
 def delete_carousel(carousel_id):
     sql_delete = """
-        DELETE FROM carousels WHERE carousel_id = %s
+        DELETE FROM homepage_images WHERE image_id = %s
     """
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
@@ -98,3 +101,49 @@ def delete_carousel(carousel_id):
     cursor.close()
     conn.close()
     return jsonify({'message': 'Carousel deleted successfully!'})
+
+# 读取海报
+@manage_home_blueprint.route('/api/cms/flyers', methods=['GET'])
+def flyers():
+    sql_read = """
+        select * from homepage_images
+        where type = 'flyer'
+    """
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read)
+    result = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    flyers = []
+    for i in range(0, len(result)):
+        flyers.append({
+            'image_id' : result[i][0],
+            'type': result[i][1],
+            'source' : result[i][2],
+            'link' : result[i][3],
+            'name' : result[i][4],
+            'description' : result[i][5]
+        })
+    return jsonify({
+        'flyers': flyers
+    })
+
+# 更新海报
+@manage_home_blueprint.route('/api/cms/flyers/<int:flyer_id>', methods=['PUT'])
+def update_flyer(flyer_id):
+    sql_update = """
+        update homepage_images
+        set source = %s, link = %s
+        where image_id = %s
+    """
+    data = request.get_json()
+    src = data.get('src')
+    link = data.get('link')
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_update, (src, link, flyer_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'message': 'Flyer updated successfully!'})

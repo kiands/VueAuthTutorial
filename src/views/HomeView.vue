@@ -103,7 +103,7 @@
             OUR HISTORY
           </v-card-text>
           <v-card-text>
-            Our amazing team of regular and part-time volunteers are committed to helping others. We take our convictions and turn them into action. Do you think you would be a good fit? Please get in touch for more information!
+            Seeing a need for energetic, nonprofit work in this area, we formed the Face Friends Foundation to provide sensible solutions. We've consistently grown since then, all thanks to the helping hands of this amazing community!
           </v-card-text>
           <v-btn style="margin-bottom: 20px;" @click="navigateToAbout()">ABOUT US</v-btn>
         </v-card>
@@ -115,7 +115,7 @@
             OUR MISSION
           </v-card-text>
           <v-card-text>
-            Our amazing team of regular and part-time volunteers are committed to helping others. We take our convictions and turn them into action. Do you think you would be a good fit? Please get in touch for more information!
+            We focus on making the maximum positive impact on our community. Our members and volunteers provide the momentum that helps us affect change. Using data driven models, we provide solutions that make a long-lasting difference.
           </v-card-text>
           <v-btn style="margin-bottom: 20px;" @click="navigateToSupport()">SUPPORT</v-btn>
         </v-card>

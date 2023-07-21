@@ -43,7 +43,12 @@
             <v-icon>mdi-menu</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <h1 :class="$vuetify.breakpoint.smAndDown ? 'small-text' : 'normal-text'">FACE FRIENDS FOUNDATION</h1>
+          <!--h1 :class="$vuetify.breakpoint.smAndDown ? 'small-text' : 'normal-text'">FACE FRIENDS FOUNDATION</h1-->
+          <h1 v-show="$vuetify.breakpoint.mdAndUp">Face Friends Foundation</h1>
+          <div v-show="$vuetify.breakpoint.smAndDown" style="padding-left: 15px; padding-right: 15px; border-style: solid; border-width: 1px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div style="font-size: 20px; font-weight: bold;">Face Friends</div>
+            <div style="font-size: 20px; font-weight: bold;"> Foundation</div>
+          </div>
           <v-spacer></v-spacer>
           <!-- 添加一个按钮来打开登录对话框 -->
           <v-btn icon @click="dialog = true" v-show="$vuetify.breakpoint.mdAndUp">

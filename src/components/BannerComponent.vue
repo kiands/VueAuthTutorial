@@ -32,31 +32,45 @@
       <!--This div element contains the banner text and icons-->
       <div style="width: 95vw; display: flex; flex-direction: column; justify-content: space-between; align-items: center">
         <!--This will only show up on small and down screens-->
-        <div v-show="$vuetify.breakpoint.smAndDown">678-765-0482 & 678-926-3808</div>
-        <div :class="$vuetify.breakpoint.smAndDown ? 'banner-smAndDown' : 'banner-normal'">
-          <div v-show="$vuetify.breakpoint.mdAndUp" style="display: flex; flex-direction: column; align-items: center">
+        <!--div :class="$vuetify.breakpoint.smAndDown ? 'banner-smAndDown' : 'banner-normal'"-->
+        <div v-if="$vuetify.breakpoint.smAndDown" style="width: 100%; display: flex; flex-direction: column;">
+          <div style="width: 100%; display: flex; flex-direction: row; justify-content: center">
             <div>678-765-0482</div>
             <div>&</div>
             <div>678-926-3808</div>
           </div>
-          <v-btn icon @click.stop="drawer = !drawer" v-show="$vuetify.breakpoint.smAndDown">
-            <v-icon>mdi-menu</v-icon>
-          </v-btn>
-          <v-spacer></v-spacer>
-          <!--h1 :class="$vuetify.breakpoint.smAndDown ? 'small-text' : 'normal-text'">FACE FRIENDS FOUNDATION</h1-->
-          <h1 v-show="$vuetify.breakpoint.mdAndUp">Face Friends Foundation</h1>
-          <div v-show="$vuetify.breakpoint.smAndDown" style="padding-left: 15px; padding-right: 15px; border-style: solid; border-width: 1px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <div style="font-size: 20px; font-weight: bold;">Face Friends</div>
-            <div style="font-size: 20px; font-weight: bold;"> Foundation</div>
+          <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center">
+            <v-btn icon @click.stop="drawer = !drawer">
+              <v-icon>mdi-menu</v-icon>
+            </v-btn>
+            <div v-show="$vuetify.breakpoint.smAndDown" style="padding-left: 15px; padding-right: 15px; border-style: solid; border-width: 1px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              <div style="font-size: 20px; font-weight: bold;">Face Friends</div>
+              <div style="font-size: 20px; font-weight: bold;"> Foundation</div>
+            </div>
+            <v-btn icon>
+              <v-icon>mdi-cart</v-icon>
+            </v-btn>
           </div>
-          <v-spacer></v-spacer>
+        </div>
+        <!--This will only show up on medium and up screens-->
+        <div v-if="$vuetify.breakpoint.mdAndUp" style="width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+          <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div>678-765-0482</div>
+            <div>&</div>
+            <div>678-926-3808</div>
+          </div>
+          <h1>Face Friends Foundation</h1>
           <!-- 添加一个按钮来打开登录对话框 -->
-          <v-btn icon @click="dialog = true" v-show="$vuetify.breakpoint.mdAndUp">
-            <v-icon icon>
-              mdi-account
-            </v-icon>
-          </v-btn>
-          <div v-show="$vuetify.breakpoint.smAndDown"></div>
+          <div>
+            <v-btn icon @click="dialog = true" v-show="$vuetify.breakpoint.mdAndUp">
+              <v-icon icon>
+                mdi-account
+              </v-icon>
+            </v-btn>
+            <v-btn icon>
+              <v-icon>mdi-cart</v-icon>
+            </v-btn>
+          </div>
         </div>
       </div>
       <!-- 登录对话框 -->
@@ -87,34 +101,6 @@
     </v-card>
   </div>
 </template>
-
-<style>
-.banner-normal {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center
-}
-
-.banner-smAndDown {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center
-}
-
-.small-text {
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center
-}
-
-.normal-text {
-  font-size: 3rem;
-}
-</style>
 
 <script>
 import HelloWorld from '@/components/HelloWorld';

@@ -1,5 +1,5 @@
 <template>
-  <v-container style="margin-top: 12px; margin-bottom: 12px">
+  <v-container style="margin-top: 12px; margin-bottom: 12px;">
     <!--Head (Carousel) when screen is md and up-->
     <v-row v-show="$vuetify.breakpoint.mdAndUp">
       <v-col cols="12" sm="12" md="8" style="display: flex; flex-grow: 1">
@@ -44,9 +44,9 @@
     </v-row>
     <!--Head (Carousel) when screen is sm and down-->
     <v-row v-show="$vuetify.breakpoint.smAndDown">
-      <v-col cols="12" xs="12" sm="12" style="display: flex;">
-        <v-card>
-          <v-carousel
+      <v-col cols="12" xs="12" sm="12">
+        <!--v-card style="display: flex; flex-direction: row; justify-content: center; align-items: center; height: 400px"-->
+          <!--v-carousel
             cycle
             hide-delimiter-background
             show-arrows-on-hover
@@ -55,15 +55,30 @@
               v-for="(item,i) in carousels"
               :key="i"
               @click="navigateToLink(item.link)"
-              :src=item.source
             >
+              <v-img :src=item.source style="height: 400px; width: auto; object-fit: contain;"/>
+            </v-carousel-item>
+          </v-carousel-->
+          <!--The native v-carousel is ugly and weired, I decide to use JS implementation-->
+        <!--/v-card-->
+        <v-carousel
+            cycle
+            hide-delimiter-background
+            show-arrows-on-hover
+            style="height: 400px"
+          >
+            <v-carousel-item
+              v-for="(item,i) in carousels"
+              :key="i"
+              @click="navigateToLink(item.link)"
+            >
+                <v-img :src=item.source style="height: 80%; width: auto; object-fit: cover;" />
             </v-carousel-item>
           </v-carousel>
-        </v-card>
       </v-col>
       <v-col cols="12" xs="12" sm="12">
         <!--v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;"-->
-        <v-card style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
+        <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
           <v-card-text class="text-h5 text-center" style="padding-top: 45px; padding-bottom: 20px;">
             WELCOME!
           </v-card-text>
@@ -78,7 +93,7 @@
               LEARN MORE
             </v-btn>
           </div>
-        </v-card>
+        </div>
       </v-col>
     </v-row>
     <!--Team History Mission-->

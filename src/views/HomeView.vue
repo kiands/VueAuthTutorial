@@ -1,5 +1,5 @@
 <template>
-  <v-container style="margin-top: 12px; margin-bottom: 12px;">
+  <v-container style="margin-bottom: 12px;">
     <!--Head (Carousel) when screen is md and up-->
     <v-row v-show="$vuetify.breakpoint.mdAndUp">
       <v-col cols="12" sm="12" md="8" style="display: flex; flex-grow: 1">

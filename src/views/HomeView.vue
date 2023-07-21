@@ -79,7 +79,7 @@
       <v-col cols="12" xs="12" sm="12">
         <!--v-card class="mx-auto" min-width="300" max-width="800" max-height="521" style="display: flex; flex-direction: column; justify-content: space-around; align-items: center;"-->
         <div style="height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
-          <v-card-text class="text-h5 text-center" style="padding-top: 45px; padding-bottom: 20px;">
+          <v-card-text class="text-h5 text-center" style="padding-top: 10px; padding-bottom: 20px;">
             WELCOME!
           </v-card-text>
           <v-card-text class="text-h4 text-center font-weight-bold" style="padding-top: -20px; padding-left: 30px; padding-right: 30px; padding-bottom: 30px; display: flex; flex-direction: column; align-items: center;">
@@ -100,7 +100,7 @@
     <!--Vuetify grid: those break points' work mode is `andUp`. Each screen size is divided in 12 cols-->
     <v-row style="display: flex; flex-direction: row; justify-content: center">
       <v-col cols="12" xs="12" sm="6" md="4">
-        <v-card style="display: flex; flex-direction: column; align-items: center;">
+        <v-card style="height: 100%; display: flex; flex-direction: column; align-items: center;">
           <v-img src="@/assets/Home/fx-gs.webp" max-width="270"></v-img>
           <v-card-text class="text-h4 text-center">
             OUR TEAM
@@ -112,7 +112,7 @@
         </v-card>
       </v-col>
       <v-col cols="12" xs="12" sm="6" md="4">
-        <v-card style="display: flex; flex-direction: column; align-items: center;">
+        <v-card style="height: 100%; display: flex; flex-direction: column; align-items: center;">
           <v-img src="@/assets/Home/fx-gs-1.webp" max-width="270"></v-img>
           <v-card-text class="text-h4 text-center">
             OUR HISTORY
@@ -124,7 +124,7 @@
         </v-card>
       </v-col>
       <v-col cols="12" xs="12" sm="6" md="4">
-        <v-card style="display: flex; flex-direction: column; align-items: center;">
+        <v-card style="height: 100%; display: flex; flex-direction: column; align-items: center;">
           <v-img src="@/assets/Home/fx-gs-2.webp" max-width="270"></v-img>
           <v-card-text class="text-h4 text-center">
             OUR MISSION
@@ -197,7 +197,7 @@
     </v-row>
   </v-container>
 </template>
-    
+
 <script>
   import apiClient from "@/api.js"
   export default {

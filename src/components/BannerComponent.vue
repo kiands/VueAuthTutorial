@@ -1,12 +1,7 @@
 <template>
   <div>
     <div
-      style="
-      height: 10vh;
-      padding: 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;"
+      style="height: 8vh; padding: 10px; display: flex; flex-direction: row; justify-content: center; align-items: center"
     >
       <!--Navigation Drawer trigger button only exists on mdAndDown-->
       <v-navigation-drawer

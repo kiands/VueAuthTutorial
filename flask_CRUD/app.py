@@ -8,6 +8,7 @@ from services import services_blueprint
 from manage_home import manage_home_blueprint
 from manage_contacts import manage_contacts_blueprint
 from manage_services import manage_services_blueprint
+from manage_about import manage_about_blueprint
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # 需要替换成随机的字符串
@@ -19,6 +20,7 @@ app.register_blueprint(services_blueprint)
 app.register_blueprint(manage_home_blueprint)
 app.register_blueprint(manage_contacts_blueprint)
 app.register_blueprint(manage_services_blueprint)
+app.register_blueprint(manage_about_blueprint)
 # CORS(app, resources={r"/api/*": {"origins": "*"}})
 CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": "*"}})
 

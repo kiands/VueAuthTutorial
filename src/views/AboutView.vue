@@ -6,100 +6,55 @@
       </v-col>
     </v-row>
     <!--Line1-->
-    <v-row cols="12" :class="$vuetify.breakpoint.smAndDown ? 'vrow-smAndDown' : 'vrow-normal'">
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <v-card>
-          <v-img src="@/assets/About/backpack.webp"></v-img>
-        </v-card>
-      </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <div style="height: 100%">
-          <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div class="text--title">Summer Backpack and School Supply Giveaway</div>
-            <div class="text--body">Face Friends Foundation sponsored the Easter Bun and Cheese program and we served over thirty families with Easter Bun and Cheese, well done team</div>
+    <!--v-row cols="12" :class="$vuetify.breakpoint.smAndDown ? 'vrow-smAndDown' : 'vrow-normal'"-->
+    <v-row v-for="(program, i) in programs" :key="i" style="margin-bottom: 12px; display: flex; justify-content: center;">
+      <div v-if="$vuetify.breakpoint.mdAndUp" style="width: 84vw; display: flex; flex-direction: row; justify-content: center">
+        <div cols="12" v-if="i % 2 === 0" style="width: 100%; display: flex; flex-direction: row;">
+          <div cols="12" sm="12" md="6" lg="6" xl="6" style="width: 50%">
+            <v-card>
+              <v-img :src=program.source></v-img>
+            </v-card>
+          </div>
+          <div cols="12" sm="12" md="6" lg="6" xl="6" style="width: 50%">
+            <div style="height: 100%">
+              <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="text--title">{{ program.title }}</div>
+                <div class="text--body">{{ program.content }}</div>
+              </div>
+            </div>
           </div>
         </div>
-      </v-col>
-    </v-row>
-    <!--Line2-->
-    <v-row cols="12">
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <div style="height: 100%">
-          <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div class="text--title">Easter Bun and Cheese Program</div>
-            <div class="text--body">Face Friends Foundation provides free backpacks and school supplies to children in need</div>
+        <div cols="12" v-if="i % 2 === 1" style="width: 98%; display: flex; flex-direction: row;">
+          <div cols="12" sm="12" md="6" lg="6" xl="6" style="width: 50%">
+            <div style="height: 100%">
+              <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="text--title">{{ program.title }}</div>
+                <div class="text--body">{{ program.content }}</div>
+              </div>
+            </div>
+          </div>
+          <div cols="12" sm="12" md="6" lg="6" xl="6" style="width: 50%">
+            <v-card>
+              <v-img :src=program.source></v-img>
+            </v-card>
           </div>
         </div>
-      </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <v-card>
-          <v-img src="@/assets/About/bun.webp"></v-img>
-        </v-card>
-      </v-col>
-    </v-row>
-    <!--Line3-->
-    <v-row cols="12" :class="$vuetify.breakpoint.smAndDown ? 'vrow-smAndDown' : 'vrow-normal'">
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <v-card>
-          <v-img src="@/assets/About/gift.webp"></v-img>
-        </v-card>
-      </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <div style="height: 100%">
-          <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div class="text--title">Target Store Sponsors of Great Giftogether</div>
-            <div class="text--body">Face Friends Foundation was selected by Target Stores in Suwannee Georgia to be a recipient of the Great Giftogether Program, we selected two needy families from our pool of clients and Target 🎯 in turn donated holiday gifts 🎁 and necessities for these families. We salute Target stores for their great work in the community.</div>
+      </div>
+      <div v-if="$vuetify.breakpoint.smAndDown" style="width: 94vw; display: flex; flex-direction: row; justify-content: center">
+        <div style="width: 100%; display: flex; flex-direction: column;">
+          <v-card style="width: 100%">
+            <v-img :src=program.source style="width: 100%; height: auto"></v-img>
+          </v-card>
+          <div>
+            <div style="height: 100%">
+              <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="text--title">{{ program.title }}</div>
+                <div class="text--body">{{ program.content }}</div>
+              </div>
+            </div>
           </div>
         </div>
-      </v-col>
-    </v-row>
-    <!--Line4-->
-    <v-row cols="12">
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <div style="height: 100%">
-          <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div class="text--title">Food and Clothing Assistance</div>
-            <div class="text--body">Face Friends Foundation provides food and clothing assistance</div>
-          </div>
-        </div>
-      </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <v-card>
-          <v-img src="@/assets/About/food.webp"></v-img>
-        </v-card>
-      </v-col>
-    </v-row>
-    <!--Line5-->
-    <v-row cols="12" :class="$vuetify.breakpoint.smAndDown ? 'vrow-smAndDown' : 'vrow-normal'">
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <v-card>
-          <v-img src="@/assets/About/emergency.webp"></v-img>
-        </v-card>
-      </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <div style="height: 100%">
-          <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div class="text--title">Utility and Emergency Services Assistance</div>
-            <div class="text--body">Face Friends Foundation provides help with utility bills and emergency funds</div>
-          </div>
-        </div>
-      </v-col>
-    </v-row>
-    <!--Line6-->
-    <v-row cols="12">
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <div style="height: 100%">
-          <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div class="text--title">Free Online Tutoring</div>
-            <div class="text--body">Face Friends Foundation provides free online tutoring services for grades K-12</div>
-          </div>
-        </div>
-      </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6" xl="6">
-        <v-card>
-          <v-img src="@/assets/About/tutor.webp"></v-img>
-        </v-card>
-      </v-col>
+      </div>
     </v-row>
     <!--Board-->
     <v-row style="margin-top:24px; margin-bottom: 24px">
@@ -177,14 +132,31 @@
 </template>
 
 <script>
+  import apiClient from "@/api.js"
   export default {
-name: 'AboutView',
-// 这里是组件的JavaScript代码
+    name: 'AboutView',
+    // 这里是组件的JavaScript代码
+    data() {
+      return {
+        programs: [],
+      }
+    },
+    mounted() {
+      this.initialize()
+    },
+    methods: {
+      initialize() {
+        apiClient.get("cms/programs").then(response => {
+          this.programs = response.data.programs
+        })
+      }
+    }
   }
 </script>
 
 <style scoped>
   /* 这里是关于页面的CSS样式 */
+  /*
   .vrow-smAndDown {
     display: flex;
     flex-direction: column-reverse
@@ -193,6 +165,7 @@ name: 'AboutView',
     display: flex;
     flex-direction: row
   }
+  */
   .text--title {
     text-align: center;
     font-size: 24px

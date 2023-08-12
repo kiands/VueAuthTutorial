@@ -25,7 +25,7 @@ manage_about_blueprint = Blueprint('manage_about', __name__)
 
 # 读取项目
 @manage_about_blueprint.route('/api/cms/programs', methods=['GET'])
-def carousels():
+def programs():
     sql_read = """
         select * from programs
     """

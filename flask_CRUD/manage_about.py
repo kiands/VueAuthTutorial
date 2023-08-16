@@ -50,6 +50,7 @@ def programs():
 
 # 更新项目
 @manage_about_blueprint.route('/api/cms/programs/<int:program_id>', methods=['PUT'])
+@jwt_required()
 def update_program(program_id):
     sql_update = """
         update programs
@@ -71,6 +72,7 @@ def update_program(program_id):
 
 # 新增项目
 @manage_about_blueprint.route('/api/cms/programs', methods=['POST'])
+@jwt_required()
 def create_program():
     sql_create = """
         insert into programs (source, link, title, content)
@@ -91,6 +93,7 @@ def create_program():
 
 # 删除项目
 @manage_about_blueprint.route('/api/cms/programs/<int:program_id>', methods=['DELETE'])
+@jwt_required()
 def delete_carousel(program_id):
     sql_delete = """
         DELETE FROM programs WHERE program_id = %s

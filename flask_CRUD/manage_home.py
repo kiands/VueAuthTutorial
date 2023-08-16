@@ -52,6 +52,7 @@ def carousels():
 
 # 更新轮播图
 @manage_home_blueprint.route('/api/cms/carousels/<int:carousel_id>', methods=['PUT'])
+@jwt_required()
 def update_carousel(carousel_id):
     sql_update = """
         update homepage_images
@@ -71,6 +72,7 @@ def update_carousel(carousel_id):
 
 # 新增轮播图
 @manage_home_blueprint.route('/api/cms/carousels', methods=['POST'])
+@jwt_required()
 def create_carousel():
     sql_create = """
         insert into homepage_images (type, source, link)
@@ -90,6 +92,7 @@ def create_carousel():
 
 # 删除轮播图
 @manage_home_blueprint.route('/api/cms/carousels/<int:carousel_id>', methods=['DELETE'])
+@jwt_required()
 def delete_carousel(carousel_id):
     sql_delete = """
         DELETE FROM homepage_images WHERE image_id = %s
@@ -104,6 +107,7 @@ def delete_carousel(carousel_id):
 
 # 读取海报
 @manage_home_blueprint.route('/api/cms/flyers', methods=['GET'])
+@jwt_required()
 def flyers():
     sql_read = """
         select * from homepage_images
@@ -131,6 +135,7 @@ def flyers():
 
 # 更新海报
 @manage_home_blueprint.route('/api/cms/flyers/<int:flyer_id>', methods=['PUT'])
+@jwt_required()
 def update_flyer(flyer_id):
     sql_update = """
         update homepage_images

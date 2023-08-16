@@ -63,6 +63,7 @@ def check_booked_services():
 
 # 撤销服务预订
 @manage_services_blueprint.route('/api/cms/revoke_booking', methods=['POST'])
+@jwt_required()
 def revoke_booking():
     data = request.get_json()
     booking_id = data['booking_id']
@@ -105,6 +106,7 @@ def revoke_booking():
 
 # 查看当前提供的服务
 @manage_services_blueprint.route('/api/cms/services', methods=['GET'])
+@jwt_required()
 def check_services():
     sql_read = """
         select * from services
@@ -129,6 +131,7 @@ def check_services():
 
 # 添加新服务
 @manage_services_blueprint.route('/api/cms/services', methods=['POST'])
+@jwt_required()
 def add_new_service():
     data = request.get_json()
     service_name = data['service_name']
@@ -149,6 +152,7 @@ def add_new_service():
 # 删除服务
 # `DELETE` seems not support payload?
 @manage_services_blueprint.route('/api/cms/services/<int:service_id>', methods=['DELETE'])
+@jwt_required()
 def delete_service(service_id):
     sql_delete = """
         DELETE FROM services WHERE service_id = %s
@@ -163,7 +167,7 @@ def delete_service(service_id):
 
 # 更新服务的time slots
 @manage_services_blueprint.route('/api/cms/services', methods=['PUT'])
-# @jwt_required()
+@jwt_required()
 def update_service():
     data = request.get_json()
     service_name = data['service_name']

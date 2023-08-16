@@ -23,7 +23,6 @@ config = {
 
 manage_contacts_blueprint = Blueprint('manage_contacts', __name__)
 
-# 测试服务项目API的路由
 @manage_contacts_blueprint.route('/api/cms/contacts', methods=['GET'])
 def contacts():
     sql_detect = """

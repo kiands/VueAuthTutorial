@@ -22,6 +22,7 @@ google_oauth_secret = os.environ.get("GOOGLE_OAUTH_SECRET")
 google_oauth_redirect_uri = os.environ.get("GOOGLE_OAUTH_REDIRECT_URI")
 google_oauth_token_uri = os.environ.get("GOOGLE_OAUTH_TOKEN_URI")
 google_userinfo_uri = os.environ.get("GOOGLE_USER_INFO_URI")
+salt = os.environ.get("SALT")
 
 # 数据库配置
 config = {
@@ -69,20 +70,37 @@ def register():
 @auth_blueprint.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
-    print(data)
     email = data['email']
     password = data['password']
-    user = next((u for u in users if u['email'] == email), None)
-    if user and check_password_hash(user['password'], password):
-        # Generate a JWT token for the user
-        jwt_token = create_access_token(identity=user['user_name'])
+    salted_password = salt + password
+    sha256 = hashlib.sha256()
+    sha256.update(salted_password.encode('utf-8'))
+    hashed_password = sha256.hexdigest()
+    sql_read = """
+            SELECT * FROM users
+            WHERE email = %s and password = %s
+        """
+    # connect to MySQL
+    conn = mysql.connector.connect(**config)
+    # create a cursor
+    cursor = conn.cursor()
+    # check if this user exists
+    cursor.execute(sql_read, (email, hashed_password))
+    result = cursor.fetchall()
+    if len(result) == 1:
+        cursor.close()
+        conn.close()
+        # Generate a JWT token for the user and the identity is the user_id.
+        jwt_token = create_access_token(identity=result[0][0])
         # Generate a Refresh token for the user
-        refresh_token = create_refresh_token(identity=user['user_name'])
+        refresh_token = create_refresh_token(identity=result[0][0])
         # Don't know what's it for
-        session['user'] = user
-        print(user['user_name'])
-        return jsonify({'user_name': user['user_name'], 'access_token': jwt_token, 'refresh_token': refresh_token})
+        # session['user'] = user
+        # print(user['user_name'])
+        return jsonify({'user_id': result[0][0], 'user_name': result[0][1], 'access_token': jwt_token, 'refresh_token': refresh_token})
     else:
+        cursor.close()
+        conn.close()
         return jsonify({'error': 'Invalid email or password'}), 401
 
 # Google OAuth API

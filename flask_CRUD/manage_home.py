@@ -152,3 +152,30 @@ def update_flyer(flyer_id):
     cursor.close()
     conn.close()
     return jsonify({'message': 'Flyer updated successfully!'})
+
+# 读取赞助商
+@manage_home_blueprint.route('/api/cms/sponsors', methods=['GET'])
+def sponsors():
+    sql_read = """
+        select * from homepage_images
+        where type = 'sponsor'
+    """
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_read)
+    result = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    sponsors = []
+    for i in range(0, len(result)):
+        sponsors.append({
+            'image_id' : result[i][0],
+            'type': result[i][1],
+            'source' : result[i][2],
+            'link' : result[i][3],
+            'name' : result[i][4],
+            'description' : result[i][5]
+        })
+    return jsonify({
+        'sponsors': sponsors
+    })

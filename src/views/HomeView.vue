@@ -178,25 +178,40 @@
           <v-card-text class="text-h4 font-weight-bold" style="display: flex; flex-direction: column; align-items: center">
             OUR SPONSORS
           </v-card-text>
-          <div style="width: 320px; margin-bottom: 12px; display: flex; flex-direction: row; justify-content: space-between; align-items: center">
-            <div>
-              <v-img src="@/assets/Home/target.png" max-width="60"></v-img>
-            </div>
-            <div>
-              <v-img src="@/assets/Home/hh.png" max-width="100"></v-img>
-            </div>
-            <div>
-              <v-img src="@/assets/Home/publix.png" max-width="70"></v-img>
-            </div>
-            <div>
-              <v-img src="@/assets/Home/sams.png" max-width="80"></v-img>
-            </div>
+          <div>
+            <!-- xs size -->
+            <v-row v-if="$vuetify.breakpoint.xsOnly" class="justify-center">
+              <v-col v-for="(sponsor, index) in sponsors" :key="index" cols="4" class="d-flex align-center justify-center">
+                <img :src="sponsor.source" alt="Sponsor" class="sponsor-image">
+              </v-col>
+            </v-row>
+
+            <!-- sm size -->
+            <v-row v-else-if="$vuetify.breakpoint.smOnly" class="justify-center">
+              <v-col v-for="(sponsor, index) in sponsors" :key="index" cols="3" class="d-flex align-center justify-center">
+                <img :src="sponsor.source" alt="Sponsor" class="sponsor-image">
+              </v-col>
+            </v-row>
+
+            <!-- mdAndUp size -->
+            <v-row v-else class="justify-center">
+              <v-col v-for="(sponsor, index) in sponsors" :key="index" cols="2" class="d-flex align-center justify-center">
+                <img :src="sponsor.source" alt="Sponsor" class="sponsor-image">
+              </v-col>
+            </v-row>
           </div>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
+<style scoped>
+.sponsor-image {
+  width: 100%;
+  height: auto;
+}
+</style>
 
 <script>
   import apiClient from "@/api.js"
@@ -208,6 +223,7 @@
     data() {
       return {
         carousels: [],
+        sponsors: [],
         buttonLink: 'https://www.paypal.com/webapps/shoppingcart?flowlogging_id=f418588899cbc&mfid=1686273977343_f418588899cbc#/checkout/openButton',
       }
     },
@@ -215,6 +231,9 @@
       initialize() {
         apiClient.get("cms/carousels").then(response => {
           this.carousels = response.data.carousels
+        })
+        apiClient.get("cms/sponsors").then(response => {
+          this.sponsors = response.data.sponsors
         })
       },
       navigateToAbout() {

@@ -3,8 +3,8 @@ import auth from "@/auth.js"
 import jwtDecode from "jwt-decode"
 
 const apiClient = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
-  // baseURL: "https://hzf.ngrok.dev/api/",
+  // baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: "https://hzf.ngrok.dev/api/",
   headers: {
     "Content-Type": "application/json",
   },

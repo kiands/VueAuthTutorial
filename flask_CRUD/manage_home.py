@@ -179,3 +179,58 @@ def sponsors():
     return jsonify({
         'sponsors': sponsors
     })
+
+# 更新赞助商
+@manage_home_blueprint.route('/api/cms/sponsors/<int:sponsor_id>', methods=['PUT'])
+@jwt_required()
+def update_sponsors(sponsor_id):
+    sql_update = """
+        update homepage_images
+        set source = %s, link = %s
+        where image_id = %s
+    """
+    data = request.get_json()
+    src = data.get('src')
+    link = data.get('link')
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_update, (src, link, sponsor_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'message': 'Sponsor updated successfully!'})
+
+# 新增赞助商
+@manage_home_blueprint.route('/api/cms/sponsors', methods=['POST'])
+@jwt_required()
+def create_sponsor():
+    sql_create = """
+        insert into homepage_images (type, source, link)
+        values (%s, %s, %s)
+    """
+    data = request.get_json()
+    type = 'sponsor'
+    src = data.get('src')
+    link = data.get('link')
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_create, (type, src, link,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'message': 'Sponsor created successfully!'})
+
+# 删除赞助商
+@manage_home_blueprint.route('/api/cms/sponsors/<int:sponsor_id>', methods=['DELETE'])
+@jwt_required()
+def delete_sponsor(sponsor_id):
+    sql_delete = """
+        DELETE FROM homepage_images WHERE image_id = %s
+    """
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
+    cursor.execute(sql_delete, (sponsor_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({'message': 'Sponsor deleted successfully!'})

@@ -1,4 +1,5 @@
-有关服务预订取消系统中Redis的使用
+## 有关服务预订取消系统中Redis的使用
+### Will have English translation in the future
 
 首先说一下services表结构以及范例数据：
 
@@ -42,6 +43,8 @@ def update\_data():
 
 模仿一些银行的业务，每天到凌晨某时候暂停业务，对数据进行持久化。Flask框架中做这个类似定时任务的实现比较冷门，所以如果有Redis的话，可以绕开Python和这个框架在操作系统中执行Redis和MySQL的同步。
 
+| 串行任务规划 |
+| --- |
 | 上一次同步任务完成 |
 | 服务启动 |
 | 读取数据库time\_slots，保存为API之外的json变量 |
